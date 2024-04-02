@@ -76,13 +76,15 @@
   <div id="app">
       <div id="theme">
         <ul>
-          <li @click="changetheme">更换主题</li>
-          <li @click="personalize">自定义主题</li>
+          <el-button @click="changetheme">更换主题</el-button>
+          <el-button @click="personalize">自定义主题</el-button>
         </ul>
       </div>
     <div class="show">
+      
       <RouterView :linnear="theme.linnear"></RouterView>
     </div>
+    
   </div>
 </template>
 <style scoped>
