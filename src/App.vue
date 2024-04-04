@@ -60,7 +60,6 @@
     {
 	    rand=Math.floor(Math.random() * max);
     }
-    console.log(rand)
     theme.background=background[rand]
   }
   function personalize(){

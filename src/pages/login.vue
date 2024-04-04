@@ -1,26 +1,78 @@
 <script lang="ts" setup>
     defineProps(["linnear"])
     import router from '@/router'
+import { isConstructorDeclaration } from 'typescript';
     import {reactive} from 'vue'
-    let user=reactive({Email:'',Password:''})
-    function login(){
-        console.log(user)
+    function submitForm(Formname:string){
+        console.log(Formname)
         
-            router.push({path:'/home'})
+        // router.push({path:'/home'})
     }
+    let validatePass=(rule:object,value:string,callback:any)=>{
+        if (value===''){
+            console.log(value)
+           return  callback(new Error('请输入账号'));
+        }
+        else{
+            callback()
+        }
+    }
+    let validatePass2=(rule:object,value:string,callback:any)=>{
+        if (value===''){
+            callback(new Error('请输入密码'));
+        }
+        else{
+            callback()
+        }
+    }
+    let checkAge=(rule:object,value:string,callback:any)=>{
+        if (!value) {
+          return callback(new Error('验证码不能为空'));
+        }
+        else{
+            callback()
+        }
+    }
+    let ruleForm=reactive({
+          account: '',
+          pass: '',
+          vali: ''
+        })
+    let rules={
+        account: [
+            { validator: validatePass, trigger: 'blur' }
+          ],
+          pass: [
+            { validator: validatePass2, trigger: 'blur' }
+          ],
+          vali: [
+            { validator: checkAge, trigger: 'blur' }
+          ]
+    }
+
 </script>
 
 <template>
     <div id="log">
         <div class="left">
             <h2>欢迎登录</h2>
-            <input v-model="user.Email" placeholder="Email">
-            <input v-model="user.Password" placeholder="Password">
-            <span id="forget">忘记密码？</span>
-            <button @click="login">点击登录</button>
+            <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleform" class="demo-ruleForm" style="margin: auto;">
+                <el-form-item label="账号" prop="account">
+                    <el-input type="password" v-model="ruleForm.account" autocomplete="on"></el-input>
+                </el-form-item>
+                <el-form-item label="密码" prop="pass">
+                    <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="验证码" prop="vali">
+                    <el-input v-model.number="ruleForm.vali"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submitForm('ruleForm')" class="blink">登录</el-button>
+                </el-form-item>
+            </el-form>
         </div>
         <div class="right">
-            <RouterLink to="/signin">没有账号，点击注册</RouterLink>
+            <RouterLink to="/signin" class="blink">没有账号，点击注册</RouterLink>
         </div>
     </div>
 </template>
@@ -35,6 +87,9 @@
         width: 40%;
         height: 50%;
         font-family: "Microsoft soft";
+    }
+    .left h2{
+        margin-top: 30px;
     }
     .left{
         flex:1;
@@ -58,8 +113,7 @@
         font-size: 14px;
         font-weight: 700;
     }
-    .right a,
-    .left button{
+    .blink{
         width: 50%;
         margin: auto;
         position: relative;
@@ -74,15 +128,13 @@
         cursor: pointer;
         transform-style: preserve-3d;
     }
-    button{
+    .blink{
         color: white;
     }
-    .right a:hover,
-    button:hover{
+    .blink:hover{
         animation: animate 8s linear infinite;
     }
-    .right a::before,
-    button::before{
+    .blink::before{
         content: '';
         position:absolute;
         width: 100%;
@@ -94,8 +146,7 @@
         border-radius: 40px;
         opacity: 0;
     }
-    .right a:hover::before,
-    button:hover::before{
+    .blink:hover::before{
         filter: blur(20px);
         opacity: 1;
         animation: animate 8s linear infinite;
