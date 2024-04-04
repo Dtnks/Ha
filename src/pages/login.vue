@@ -25,7 +25,7 @@ import { isConstructorDeclaration } from 'typescript';
             callback()
         }
     }
-    let checkAge=(rule:object,value:string,callback:any)=>{
+    let checkVali=(rule:object,value:string,callback:any)=>{
         if (!value) {
           return callback(new Error('验证码不能为空'));
         }
@@ -46,7 +46,7 @@ import { isConstructorDeclaration } from 'typescript';
             { validator: validatePass2, trigger: 'blur' }
           ],
           vali: [
-            { validator: checkAge, trigger: 'blur' }
+            { validator: checkVali, trigger: 'blur' }
           ]
     }
 
@@ -58,7 +58,7 @@ import { isConstructorDeclaration } from 'typescript';
             <h2>欢迎登录</h2>
             <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleform" class="demo-ruleForm" style="margin: auto;">
                 <el-form-item label="账号" prop="account">
-                    <el-input type="password" v-model="ruleForm.account" autocomplete="on"></el-input>
+                    <el-input type="text" v-model="ruleForm.account" autocomplete="on"></el-input>
                 </el-form-item>
                 <el-form-item label="密码" prop="pass">
                     <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>

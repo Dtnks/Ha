@@ -51,7 +51,6 @@
   let background=["../image/sea_sunset_horizon_131804_1280x720.jpg",'../image/wallhaven-43z8x3.jpg','../image/forest_mountains_moon_121180_1280x720.jpg','../image/autumn_forest_path_122375_1280x720.jpg','../image/bridge_river_flow_100663_1280x720.jpg','../image/eruption_lava_volcano_45542_1280x720.jpg','../image/sunset_sky_clouds_121865_1280x720.jpg']
   let rand = Math.random();
   let max=background.length
-  console.log(background.length)
 	rand=Math.floor(Math.random() * max);
   let theme=reactive({background:background[rand],linnear:""})
   function changetheme(){
@@ -71,20 +70,20 @@
 </script>
 
 <template>
-  <img id="back" :src="theme.background">
   <div id="app">
-      <div id="theme">
-        <ul>
-          <el-button @click="changetheme">更换主题</el-button>
-          <el-button @click="personalize">自定义主题</el-button>
-        </ul>
-      </div>
+    <img id="back" :src="theme.background">
+    <div id="theme">
+      <ul>
+        <el-button @click="changetheme">更换主题</el-button>
+        <el-button @click="personalize">自定义主题</el-button>
+      </ul>
+    </div>
     <div class="show">
       
       <RouterView :linnear="theme.linnear"></RouterView>
     </div>
     
-  </div>
+</div>
 </template>
 <style scoped>
   #back{
@@ -92,6 +91,7 @@
     height: 100%;
     width:100%;
     object-fit: fill;
+    z-index: -1;
     background-size:auto;
   }
   #app{
@@ -100,6 +100,8 @@
     width: 100%;
     text-align: center;
     display: flex;
+    min-width: 1200px;
+    min-height: 800px;
     flex-direction: column;
   }
   .show{
