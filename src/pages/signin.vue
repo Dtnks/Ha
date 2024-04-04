@@ -26,6 +26,18 @@ import {reactive} from 'vue'
             callback()
         }
     }
+    let validatePass3=(rule:object,value:string,callback:any)=>{
+        if (value===''){
+            callback(new Error('请确定密码'));
+        }
+        else{
+            if(value!=ruleForm.pass)
+            {
+                callback(new Error('两次密码输入不一致'))
+            }
+            else{
+                callback()
+        }}}
     let checkAge=(rule:object,value:string,callback:any)=>{
         if (!value) {
           return callback(new Error('验证码不能为空'));
@@ -45,6 +57,9 @@ import {reactive} from 'vue'
           ],
           pass: [
             { validator: validatePass2, trigger: 'blur' }
+          ],
+          checkPass: [
+            {validator: validatePass3, trigger: 'blur'}
           ],
           vali: [
             { validator: checkAge, trigger: 'blur' }
