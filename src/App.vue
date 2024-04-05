@@ -1,6 +1,8 @@
 <script lang="ts" setup>
   import { RouterView } from 'vue-router'
-  import {onMounted, reactive} from 'vue'
+  import {onMounted, reactive,ref,watch} from 'vue'
+  import { useRouter } from 'vue-router';
+  let router = useRouter()
   //从背景图中抽取颜色，得到主题色
   function colormain(idname:string){
     let oImg = document.getElementById(idname) as HTMLCanvasElement;
@@ -70,6 +72,15 @@
   onMounted(()=>{
     colormain("back")
   })
+  let move=ref("")
+  watch(()=>router.currentRoute.value.fullPath,(to,from)=>{
+    if(to==="/login"){
+      move.value="moveleft"
+    }
+    if(to==="/signin"){
+      move.value="moveright"
+    }
+  })
 </script>
 
 <template>
@@ -88,7 +99,7 @@
     <div class="show">
       <router-view v-slot="{ Component, route }" :linnear="theme.linnear">
         <!-- 使用任何自定义过渡和回退到 `fade` -->
-        <transition name="moveUp" >
+        <transition :name="move" >
           <component :is="Component" :key="$route.path" />
         </transition>
       </router-view>
@@ -131,19 +142,33 @@
   .show #log{
     box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
   }
-  .moveUp-enter-active{
-    animation: fadeIn .5s ease-in;
+  .moveleft-enter-active{
+    animation: move1 .5s ease-in;
   }
-  @keyframes fadeIn{
-    0% {transform: translateX(800px);}
+  @keyframes move1{
+    0% {transform: translateX(1000px);}
     100% {transform: translateX(-400px);}
   }
-  .moveUp-leave-active{
-    animation: move .5s ease-in;
+  .moveleft-leave-active{
+    animation: move2 .5s ease-in;
   }
-  @keyframes move{
+  @keyframes move2{
     0% {transform: translateX(400px);}
-    100% {transform: translateX(-800px);}
+    100% {transform: translateX(-1000px);}
+  }
+  .moveright-enter-active{
+    animation: move3 .5s ease-in;
+  }
+  @keyframes move3{
+    0% {transform: translateX(-1800px);}
+    100% {transform: translateX(-400px);}
+  }
+  .moveright-leave-active{
+    animation: move4 .5s ease-in;
+  }
+  @keyframes move4{
+    0% {transform: translateX(400px);}
+    100% {transform: translateX(1800px);}
   }
   #theme ul{
     display: flex;
