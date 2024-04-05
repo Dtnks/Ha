@@ -74,7 +74,8 @@
   })
   let move=ref("")
   watch(()=>router.currentRoute.value.fullPath,(to,from)=>{
-    if(to==="/login"){
+    console.log(router.currentRoute.value.fullPath)
+    if(to==="/login" || to==="/home/a"){
       move.value="moveleft"
     }
     if(to==="/signin"){
@@ -91,11 +92,6 @@
         <el-button @click="changetheme">更换主题</el-button>
       </ul>
     </div>
-    <!-- <transition class="high" :name="show">
-      <div class="show">
-        <RouterView :linnear="theme.linnear"></RouterView>
-      </div>
-    </transition> -->
     <div class="show">
       <router-view v-slot="{ Component, route }" :linnear="theme.linnear">
         <!-- 使用任何自定义过渡和回退到 `fade` -->

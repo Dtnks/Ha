@@ -3,10 +3,10 @@
     import router from '@/router'
 import { isConstructorDeclaration } from 'typescript';
     import {reactive} from 'vue'
-    function submitForm(Formname:string){
+    function submitForm(Formname:object){
         console.log(Formname)
         
-        // router.push({path:'/home'})
+        router.push({path:'/home'})
     }
     let validatePass=(rule:object,value:string,callback:any)=>{
         if (value===''){
@@ -67,7 +67,7 @@ import { isConstructorDeclaration } from 'typescript';
                     <el-input v-model.number="ruleForm.vali"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="submitForm('ruleForm')" class="blink">登录</el-button>
+                    <el-button type="primary" @click="submitForm(ruleForm)" class="blink">登录</el-button>
                 </el-form-item>
             </el-form>
         </div>
