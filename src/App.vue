@@ -28,8 +28,9 @@
     const b = pxArr[i + 2];
     const a = pxArr[i + 3];
     //数字越大，计算的越快
-    i = i + 40000; 
+    i = i + 80000; 
     const key = [r,g,b,a].join(',')
+    //判断颜色是否存在，存在则num+1，不存在则新加入字典
     key in colorList ? ++colorList[key] : (colorList[key] = 1)
     }
 
@@ -41,11 +42,22 @@
     })}
     arr = arr.sort((a,b) => b.num - a.num)
     //随机抽取颜色列表
-    let Rand1 = Math.random();
     let range=arr.length-1
-		Rand1=Math.round(Rand1*range)
-    let Rand2 = Math.random();
-		Rand2=Math.round(Rand2*range)
+    let distance=0
+    //避免渐变色相近
+    let Rand1:number=0
+    let Rand2:number=0
+    while(distance<100)
+    {
+      Rand1=Math.round(Math.random()*range)
+		  Rand2=Math.round(Math.random()*range)
+      let rgb=arr[Rand1].rgba.split(",")
+      let a =Number(rgb[0].split("(")[1]),b=Number(rgb[1]),c=Number(rgb[2])
+      rgb=arr[Rand2].rgba.split(",")
+      let d =Number(rgb[0].split("(")[1]),e=Number(rgb[1]),f=Number(rgb[2])
+      distance=Math.abs(a-d)+Math.abs(b-e)+Math.abs(c-f)
+      console.log(distance)
+    }
     theme.linnear=arr[Rand2].rgba+','+arr[Rand1].rgba+','+arr[Rand2].rgba
     })  
 }
@@ -63,18 +75,19 @@
   //改变主题
   function changetheme(){
     rand=Math.floor(Math.random() * max);
+    //避免抽到相同的背景图片，而主题不发生变化
     while(background[rand]==theme.background)
     {
 	    rand=Math.floor(Math.random() * max);
     }
     theme.background=background[rand]
   }
+  //每次改变的时候提取一次渐变色
   onMounted(()=>{
     colormain("back")
   })
   let move=ref("")
   watch(()=>router.currentRoute.value.fullPath,(to,from)=>{
-    console.log(router.currentRoute.value.fullPath)
     if(to==="/login" || to==="/home/a"){
       move.value="moveleft"
     }

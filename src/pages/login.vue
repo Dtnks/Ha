@@ -134,24 +134,6 @@ import { isConstructorDeclaration } from 'typescript';
     .blink:hover{
         animation: animate 8s linear infinite;
     }
-    .blink::before{
-        content: '';
-        position:absolute;
-        width: 100%;
-        height: 100%;
-        inset: -5px;
-        z-index: -1;
-        background-image:linear-gradient(90deg,v-bind(linnear));
-        background-size: 400%;
-        border-radius: 40px;
-        opacity: 0;
-    }
-    .blink:hover::before{
-        filter: blur(20px);
-        opacity: 1;
-        animation: animate 8s linear infinite;
-        transform: translateZ(-1px);
-    }
     @keyframes animate{
         from {
             background-position: 0%;
