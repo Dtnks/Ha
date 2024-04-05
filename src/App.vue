@@ -1,6 +1,7 @@
 <script lang="ts" setup>
   import { RouterView } from 'vue-router'
   import {onMounted, reactive} from 'vue'
+  //从背景图中抽取颜色，得到主题色
   function colormain(idname:string){
     let oImg = document.getElementById(idname) as HTMLCanvasElement;
     oImg.addEventListener("load" , function () {
@@ -24,6 +25,7 @@
     const g = pxArr[i + 1];
     const b = pxArr[i + 2];
     const a = pxArr[i + 3];
+    //数字越大，计算的越快
     i = i + 40000; 
     const key = [r,g,b,a].join(',')
     key in colorList ? ++colorList[key] : (colorList[key] = 1)
@@ -36,6 +38,7 @@
         num: colorList[key]
     })}
     arr = arr.sort((a,b) => b.num - a.num)
+    //随机抽取颜色列表
     let Rand1 = Math.random();
     let range=arr.length-1
 		Rand1=Math.round(Rand1*range)
@@ -44,15 +47,18 @@
     theme.linnear=arr[Rand2].rgba+','+arr[Rand1].rgba+','+arr[Rand2].rgba
     })  
 }
+  //主题的接口
   interface Theme{
     background:string,
     linnear:string
   }
+  //模拟背景图片
   let background=["../image/sea_sunset_horizon_131804_1280x720.jpg",'../image/wallhaven-43z8x3.jpg','../image/forest_mountains_moon_121180_1280x720.jpg','../image/autumn_forest_path_122375_1280x720.jpg','../image/bridge_river_flow_100663_1280x720.jpg','../image/eruption_lava_volcano_45542_1280x720.jpg','../image/sunset_sky_clouds_121865_1280x720.jpg']
   let rand = Math.random();
   let max=background.length
 	rand=Math.floor(Math.random() * max);
   let theme=reactive({background:background[rand],linnear:""})
+  //改变主题
   function changetheme(){
     rand=Math.floor(Math.random() * max);
     while(background[rand]==theme.background)
@@ -60,9 +66,6 @@
 	    rand=Math.floor(Math.random() * max);
     }
     theme.background=background[rand]
-  }
-  function personalize(){
-
   }
   onMounted(()=>{
     colormain("back")
@@ -75,13 +78,22 @@
     <div id="theme">
       <ul>
         <el-button @click="changetheme">更换主题</el-button>
-        <el-button @click="personalize">自定义主题</el-button>
       </ul>
     </div>
+    <!-- <transition class="high" :name="show">
+      <div class="show">
+        <RouterView :linnear="theme.linnear"></RouterView>
+      </div>
+    </transition> -->
     <div class="show">
-      
-      <RouterView :linnear="theme.linnear"></RouterView>
+      <router-view v-slot="{ Component, route }" :linnear="theme.linnear">
+        <!-- 使用任何自定义过渡和回退到 `fade` -->
+        <transition name="moveUp" >
+          <component :is="Component" :key="$route.path" />
+        </transition>
+      </router-view>
     </div>
+  
     
 </div>
 </template>
@@ -93,6 +105,9 @@
     object-fit: fill;
     z-index: -1;
     background-size:auto;
+  }
+  .high{
+    height: 100%;
   }
   #app{
     position: absolute;
@@ -115,6 +130,20 @@
   }
   .show #log{
     box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+  }
+  .moveUp-enter-active{
+    animation: fadeIn .5s ease-in;
+  }
+  @keyframes fadeIn{
+    0% {transform: translateX(800px);}
+    100% {transform: translateX(-400px);}
+  }
+  .moveUp-leave-active{
+    animation: move .5s ease-in;
+  }
+  @keyframes move{
+    0% {transform: translateX(400px);}
+    100% {transform: translateX(-800px);}
   }
   #theme ul{
     display: flex;

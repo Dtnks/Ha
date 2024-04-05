@@ -1,6 +1,6 @@
 <script lang="ts" setup>
     import router from '@/router';
-import {reactive} from 'vue'
+    import {reactive} from 'vue'
     import {} from 'vue-router'
     defineProps(["linnear"])
     let ruleForm=reactive({
