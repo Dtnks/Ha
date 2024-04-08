@@ -1,7 +1,6 @@
 <script lang="ts" setup>
     defineProps(["linnear"])
     import router from '@/router'
-import { isConstructorDeclaration } from 'typescript';
     import {reactive} from 'vue'
     function submitForm(Formname:object){
         console.log(Formname)
@@ -11,7 +10,7 @@ import { isConstructorDeclaration } from 'typescript';
     let validatePass=(rule:object,value:string,callback:any)=>{
         if (value===''){
             console.log(value)
-           return  callback(new Error('请输入账号'));
+            callback(new Error('请输入账号'));
         }
         else{
             callback()
@@ -101,6 +100,7 @@ import { isConstructorDeclaration } from 'typescript';
     .right{
         flex:1;
         display: flex;
+        backdrop-filter: blur(4px);
         justify-content: center;
     }
     input{
@@ -126,7 +126,6 @@ import { isConstructorDeclaration } from 'typescript';
         font-size: 14px;
         font-weight: 700;
         cursor: pointer;
-        transform-style: preserve-3d;
     }
     .blink{
         color: white;

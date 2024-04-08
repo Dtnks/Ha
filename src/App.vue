@@ -71,7 +71,7 @@
   let rand = Math.random();
   let max=background.length
 	rand=Math.floor(Math.random() * max);
-  let theme=reactive({background:background[rand],linnear:""})
+  let theme=reactive({background:background[rand],linnear:"",backcolor:''} as Theme)
   //改变主题
   function changetheme(){
     rand=Math.floor(Math.random() * max);
@@ -82,17 +82,21 @@
     }
     theme.background=background[rand]
   }
+  setInterval(changetheme,1000000)
   //每次改变的时候提取一次渐变色
   onMounted(()=>{
     colormain("back")
   })
   let move=ref("")
   watch(()=>router.currentRoute.value.fullPath,(to,from)=>{
-    if(to==="/login" || to==="/home/a"){
+    if(to==="/login"){
       move.value="moveleft"
     }
     if(to==="/signin"){
       move.value="moveright"
+    }
+    if(to==="/home/a"){
+      move.value="fade"
     }
   })
 </script>
@@ -100,13 +104,13 @@
 <template>
   <div id="app">
     <img id="back" :src="theme.background">
-    <div id="theme">
+    <!-- <div id="theme">
       <ul>
         <el-button @click="changetheme">更换主题</el-button>
       </ul>
-    </div>
+    </div> -->
     <div class="show">
-      <router-view v-slot="{ Component, route }" :linnear="theme.linnear">
+      <router-view v-slot="{ Component, route }" :linnear="theme.linnear" >
         <!-- 使用任何自定义过渡和回退到 `fade` -->
         <transition :name="move" >
           <component :is="Component" :key="$route.path" />
@@ -149,7 +153,7 @@
     height: auto;
   }
   .show #log{
-    box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
   }
   .moveleft-enter-active{
     animation: move1 .5s ease-in;
@@ -178,6 +182,20 @@
   @keyframes move4{
     0% {transform: translateX(400px);}
     100% {transform: translateX(1800px);}
+  }
+  .fade-enter-active{
+    animation:fadein .2s ease-in;
+  }
+  @keyframes fadein{
+    0%{transform: translateX(400px)};
+    100%{transform: translateX(-1000px)};
+  }
+  .fade-leave-active{
+    animation: fadeout .2s ease-in;
+  }
+  @keyframes fadeout{
+    0%{transform: translateX(400px)};
+    100%{transform: translateX(400px)};
   }
   #theme ul{
     display: flex;

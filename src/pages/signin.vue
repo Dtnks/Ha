@@ -2,7 +2,7 @@
     import router from '@/router';
     import {reactive} from 'vue'
     import {} from 'vue-router'
-    defineProps(["linnear"])
+    defineProps(["linnear","back"])
     let ruleForm=reactive({
           account: '',
           pass: '',
@@ -17,11 +17,10 @@
     }
     let validatePass=(rule:object,value:string,callback:any)=>{
         if (value===''){
-            console.log(value)
-           return  callback(new Error('请输入账号'));
+           callback(new Error('请输入账号'));
         }
         else{
-            callback()
+            callback();
         }
     }
     let validatePass2=(rule:object,value:string,callback:any)=>{
@@ -29,7 +28,7 @@
             callback(new Error('请输入密码'));
         }
         else{
-            callback()
+            callback();
         }
     }
     let validatePass3=(rule:object,value:string,callback:any)=>{
@@ -37,19 +36,18 @@
             callback(new Error('请确定密码'));
         }
         else if (value!==ruleForm.pass){
-            callback(new Error('两次密码输入不一致'))
+            callback(new Error('两次密码输入不一致'));
         }
         else{
-                console.log(ruleForm)
-                callback()
+                callback();
             }
         }
     let checkVali=(rule:object,value:string,callback:any)=>{
         if (!value) {
-          return callback(new Error('验证码不能为空'));
+            callback(new Error('验证码不能为空'));
         }
         else{
-            callback()
+            callback();
         }
     }
     let rules={
@@ -102,7 +100,6 @@
     #log{
         margin: auto;
         display: flex;
-        z-index: 90;
         border-radius: 5px;
         justify-content: space-around;
         flex-direction: row;
@@ -123,6 +120,7 @@
     .left{
         flex:1;
         display: flex;
+        backdrop-filter: blur(4px);
         justify-content: center;
     }
     input{
@@ -148,7 +146,6 @@
         font-size: 14px;
         font-weight: 700;
         cursor: pointer;
-        transform-style: preserve-3d;
     }
     .blink:hover{
         animation: animate 8s linear infinite;
