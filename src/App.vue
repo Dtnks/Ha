@@ -3,6 +3,19 @@
   import {onMounted, reactive,ref,watch} from 'vue'
   import { useRouter } from 'vue-router';
   let router = useRouter()
+  //模拟背景图片
+  let background=["../image/sea_sunset_horizon_131804_1280x720.jpg",'../image/wallhaven-43z8x3.jpg','../image/forest_mountains_moon_121180_1280x720.jpg','../image/autumn_forest_path_122375_1280x720.jpg','../image/bridge_river_flow_100663_1280x720.jpg','../image/eruption_lava_volcano_45542_1280x720.jpg','../image/sunset_sky_clouds_121865_1280x720.jpg']
+  let theme=reactive(JSON.parse(localStorage.getItem('theme') as string))
+  // 设置本地存储，避免因为刷新而更换背景
+  if (theme.background){
+    localStorage.setItem('theme',JSON.stringify(theme))
+  }
+  else{
+    let rand = Math.random();
+    let max=background.length
+    rand=Math.floor(Math.random() * max);  
+    theme=reactive({background:'',linnear:"",backcolor:''})
+  }
   //从背景图中抽取颜色，得到主题色
   function colormain(idname:string){
     let oImg = document.getElementById(idname) as HTMLCanvasElement;
@@ -33,7 +46,6 @@
     //判断颜色是否存在，存在则num+1，不存在则新加入字典
     key in colorList ? ++colorList[key] : (colorList[key] = 1)
     }
-
     let arr = [];
     for(let key in colorList){
     arr.push({
@@ -60,21 +72,12 @@
     }
     theme.linnear=arr[Rand2].rgba+','+arr[Rand1].rgba+','+arr[Rand2].rgba
     })  
-}
-  //主题的接口
-  interface Theme{
-    background:string,
-    linnear:string
   }
-  //模拟背景图片
-  let background=["../image/sea_sunset_horizon_131804_1280x720.jpg",'../image/wallhaven-43z8x3.jpg','../image/forest_mountains_moon_121180_1280x720.jpg','../image/autumn_forest_path_122375_1280x720.jpg','../image/bridge_river_flow_100663_1280x720.jpg','../image/eruption_lava_volcano_45542_1280x720.jpg','../image/sunset_sky_clouds_121865_1280x720.jpg']
-  let rand = Math.random();
-  let max=background.length
-	rand=Math.floor(Math.random() * max);
-  let theme=reactive({background:background[rand],linnear:"",backcolor:''} as Theme)
   //改变主题
   function changetheme(){
-    rand=Math.floor(Math.random() * max);
+    let max=background.length
+    console.log(theme)
+    let rand=Math.floor(Math.random() * max);
     //避免抽到相同的背景图片，而主题不发生变化
     while(background[rand]==theme.background)
     {
@@ -82,7 +85,7 @@
     }
     theme.background=background[rand]
   }
-  setInterval(changetheme,1000000)
+  setInterval(changetheme,720000)
   //每次改变的时候提取一次渐变色
   onMounted(()=>{
     colormain("back")
