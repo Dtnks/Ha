@@ -7,14 +7,11 @@
   let background=["../image/sea_sunset_horizon_131804_1280x720.jpg",'../image/wallhaven-43z8x3.jpg','../image/forest_mountains_moon_121180_1280x720.jpg','../image/autumn_forest_path_122375_1280x720.jpg','../image/bridge_river_flow_100663_1280x720.jpg','../image/eruption_lava_volcano_45542_1280x720.jpg','../image/sunset_sky_clouds_121865_1280x720.jpg']
   let theme=reactive(JSON.parse(localStorage.getItem('theme') as string))
   // 设置本地存储，避免因为刷新而更换背景
-  if (theme.background){
-    localStorage.setItem('theme',JSON.stringify(theme))
-  }
-  else{
+  if (theme.background==""){
     let rand = Math.random();
     let max=background.length
     rand=Math.floor(Math.random() * max);  
-    theme=reactive({background:'',linnear:"",backcolor:''})
+    theme=reactive({background:background[rand],linnear:"",backcolor:''})
   }
   //从背景图中抽取颜色，得到主题色
   function colormain(idname:string){
@@ -68,7 +65,6 @@
       rgb=arr[Rand2].rgba.split(",")
       let d =Number(rgb[0].split("(")[1]),e=Number(rgb[1]),f=Number(rgb[2])
       distance=Math.abs(a-d)+Math.abs(b-e)+Math.abs(c-f)
-      console.log(distance)
     }
     theme.linnear=arr[Rand2].rgba+','+arr[Rand1].rgba+','+arr[Rand2].rgba
     })  
@@ -76,7 +72,6 @@
   //改变主题
   function changetheme(){
     let max=background.length
-    console.log(theme)
     let rand=Math.floor(Math.random() * max);
     //避免抽到相同的背景图片，而主题不发生变化
     while(background[rand]==theme.background)
@@ -84,6 +79,7 @@
 	    rand=Math.floor(Math.random() * max);
     }
     theme.background=background[rand]
+    localStorage.setItem('theme',JSON.stringify(theme))
   }
   setInterval(changetheme,720000)
   //每次改变的时候提取一次渐变色
