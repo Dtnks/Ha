@@ -2,13 +2,14 @@
     defineProps(["linnear"])
     import router from '@/router'
     import {reactive,onMounted,ref} from 'vue'
+    let code=ref<string|null>(localStorage.getItem('code'))
+  // 设置本地存储，避免因为刷新而更换背景
+    let co=ref("rgb("+Math.random()*255+","+Math.random()*255+","+Math.random()*255+")")
     let random=new Array<number|string>(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
                     'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z');
-    let co=ref("rgb("+Math.random()*255+","+Math.random()*255+","+Math.random()*255+")")
-    let code=ref("")
+    localStorage.setItem('code',code.value as string)
     function submitForm(Formname:object){
-        console.log(Formname)
-        
+
         router.push({path:'/home'})
     }
     let validatePass=(rule:object,value:string,callback:any)=>{
@@ -33,8 +34,6 @@
           return callback(new Error('验证码不能为空'));
         }
         else if(code.value!=ruleForm.vali){
-            console.log(code.value)
-            console.log(ruleForm.vali)
             callback(new Error("验证码错误"))
         }
         else{
@@ -58,13 +57,13 @@
           ]
     }
     function changeCode(){
-        let i=0
         code.value=''
         co.value="rgb("+Math.random()*255+","+Math.random()*255+","+Math.random()*255+")"
-        for (let i=0;i<4;i++)
-        {
-            code.value=code.value+random[Math.floor(Math.random()*62)]
+        let codelis=''
+        for (let i=0;i<4;i++){
+            codelis=codelis+random[Math.floor(Math.random()*62)]
         }
+        code.value=codelis
     }
     function draw() {
       let canvas_width =  (document.querySelector(".valitext") as HTMLCanvasElement).clientWidth;
@@ -79,7 +78,7 @@
       //4个验证码数
       for (var i = 0; i <= 3; i++) {
         var deg = (Math.random() * 30 * Math.PI) / 180; //产生0~30之间的随机弧度
-        var txt = code.value[i]; //得到随机的一个内容
+        var txt = (code.value as string)[i]; //得到随机的一个内容
         // show_num[i] = txt.toLowerCase();// 依次把取得的内容放到数组里面
         var x = 10 + i * 20; //文字在canvas上的x坐标
         var y = 20 + Math.random() * 8; //文字在canvas上的y坐标
@@ -108,8 +107,8 @@
         );
         context.stroke();
       }
-      //验证码上显示31个小点
-      for (var i = 0; i <= 30; i++) {
+      //验证码上显示41个小点
+      for (var i = 0; i <= 40; i++) {
         context.strokeStyle = co.value;
         context.beginPath();
         var x = Math.random() * canvas_width;
@@ -118,23 +117,22 @@
         context.lineTo(x + 1, y + 1);
         context.stroke();
       }
-
-      //最后把取得的验证码数组存起来，方式不唯一
-    //   var num = show_num.join("");
-    //   // console.log(num);
-    //   this.true_code = num
+    }
+    if (code.value==="[object Object]"){
+        draw()
     }
     onMounted(()=>{
-        draw()
-    })
-
+        console.log(1111)
+        console.log(document.querySelector(".valitext"))
+        if (document.querySelector(".valitext")!==null)
+            draw()})
 </script>
 
 <template>
     <div id="log">
         <div class="left">
             <h2>欢迎登录</h2>
-            <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleform" class="demo-ruleForm" style="margin: auto;">
+            <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleform" class="demo-ruleForm" style="margin: auto;" label-width="auto" label-position="right">
                 <el-form-item label="账号" prop="account">
                     <el-input type="text" v-model="ruleForm.account" autocomplete="on"></el-input>
                 </el-form-item>
@@ -144,7 +142,7 @@
                 <el-form-item label="验证码" prop="vali">
                     <div class="line">
                         <el-input v-model.number="ruleForm.vali" ></el-input>
-                        <canvas class="valitext" @click="draw()"></canvas>
+                        <canvas class="valitext" @click="draw()" ref="convas"></canvas>
                     </div>
                 </el-form-item>
                 <el-form-item>
@@ -177,6 +175,7 @@
         display: flex;
         justify-content: space-around;
         flex-direction: column;
+        padding: 0 15px;
         background-color:#f0f0f0  ;
     }
     .right{
@@ -243,7 +242,6 @@
         user-select:none;
         letter-spacing: 2px;
         background-color: white ;
-        color: v-bind(co);
     }
     .line{
         display: flex;

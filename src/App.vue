@@ -11,7 +11,7 @@
     let rand = Math.random();
     let max=background.length
     rand=Math.floor(Math.random() * max);  
-    theme=reactive({background:background[rand],linnear:"",backcolor:''})
+    theme=reactive({background:background[rand],linnear:""})
   }
   //从背景图中抽取颜色，得到主题色
   function colormain(idname:string){
@@ -79,13 +79,13 @@
 	    rand=Math.floor(Math.random() * max);
     }
     theme.background=background[rand]
+    colormain("back")
     localStorage.setItem('theme',JSON.stringify(theme))
+    
   }
   setInterval(changetheme,720000)
   //每次改变的时候提取一次渐变色
-  onMounted(()=>{
-    colormain("back")
-  })
+    
   let move=ref("")
   watch(()=>router.currentRoute.value.fullPath,(to,from)=>{
     if(to==="/login"){
@@ -103,11 +103,6 @@
 <template>
   <div id="app">
     <img id="back" :src="theme.background">
-    <!-- <div id="theme">
-      <ul>
-        <el-button @click="changetheme">更换主题</el-button>
-      </ul>
-    </div> -->
     <div class="show">
       <router-view v-slot="{ Component, route }" :linnear="theme.linnear" >
         <!-- 使用任何自定义过渡和回退到 `fade` -->

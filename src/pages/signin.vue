@@ -64,7 +64,9 @@
             { validator: checkVali, trigger: 'blur' }
           ]
     }
+    function getvali(){
 
+    }
 </script>
 
 <template>
@@ -85,7 +87,10 @@
                     <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="验证码" prop="vali">
-                    <el-input v-model.number="ruleForm.vali"></el-input>
+                    <div class="line">
+                        <el-input v-model.number="ruleForm.vali" ></el-input>
+                        <div class="vali" @click="getvali()">获取验证码</div>
+                    </div>
                 </el-form-item>
                 <div></div>
                 <el-form-item>
@@ -167,6 +172,19 @@
     color: white;
     font-weight: bold;
     }
-
+    .vali{
+        min-width: 100px;
+        height: 30px;
+        font-weight: bold;
+        border: 0;
+        user-select:none;
+        cursor: pointer;
+        background-color: white ;
+        border-radius: 5px;
+    }
+    .line{
+        display: flex;
+        flex-direction: row;
+    }
 
 </style>
