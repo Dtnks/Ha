@@ -3,15 +3,18 @@
   import {onMounted, reactive,ref,watch} from 'vue'
   import { useRouter } from 'vue-router';
   let router = useRouter()
+  let theme:object
   //模拟背景图片
   let background=["../image/sea_sunset_horizon_131804_1280x720.jpg",'../image/wallhaven-43z8x3.jpg','../image/forest_mountains_moon_121180_1280x720.jpg','../image/autumn_forest_path_122375_1280x720.jpg','../image/bridge_river_flow_100663_1280x720.jpg','../image/eruption_lava_volcano_45542_1280x720.jpg','../image/sunset_sky_clouds_121865_1280x720.jpg']
-  let theme=reactive(JSON.parse(localStorage.getItem('theme') as string))
   // 设置本地存储，避免因为刷新而更换背景
-  if (theme.background==""){
+  if (localStorage.getItem('theme')==null){
     let rand = Math.random();
     let max=background.length
     rand=Math.floor(Math.random() * max);  
     theme=reactive({background:background[rand],linnear:""})
+  }
+  else{
+    let theme=reactive(JSON.parse(localStorage.getItem('theme') as string))
   }
   //从背景图中抽取颜色，得到主题色
   function colormain(idname:string){
