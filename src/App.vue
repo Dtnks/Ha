@@ -3,7 +3,10 @@
   import {onMounted, reactive,ref,watch} from 'vue'
   import { useRouter } from 'vue-router';
   let router = useRouter()
-  let theme:object
+  interface Theme{
+    background:string,linnear:string
+  }
+  let theme:Theme
   //模拟背景图片
   let background=["../image/sea_sunset_horizon_131804_1280x720.jpg",'../image/wallhaven-43z8x3.jpg','../image/forest_mountains_moon_121180_1280x720.jpg','../image/autumn_forest_path_122375_1280x720.jpg','../image/bridge_river_flow_100663_1280x720.jpg','../image/eruption_lava_volcano_45542_1280x720.jpg','../image/sunset_sky_clouds_121865_1280x720.jpg']
   // 设置本地存储，避免因为刷新而更换背景
@@ -14,7 +17,7 @@
     theme=reactive({background:background[rand],linnear:""})
   }
   else{
-    let theme=reactive(JSON.parse(localStorage.getItem('theme') as string))
+    theme=reactive(JSON.parse(localStorage.getItem('theme') as string))
   }
   //从背景图中抽取颜色，得到主题色
   function colormain(idname:string){
@@ -153,42 +156,42 @@
     box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
   }
   .moveleft-enter-active{
-    animation: move1 .5s ease-in;
+    animation: move1 .3s ease-in;
   }
   @keyframes move1{
     0% {transform: translateX(1000px);}
     100% {transform: translateX(-400px);}
   }
   .moveleft-leave-active{
-    animation: move2 .5s ease-in;
+    animation: move2 .3s ease-in;
   }
   @keyframes move2{
     0% {transform: translateX(400px);}
     100% {transform: translateX(-1000px);}
   }
   .moveright-enter-active{
-    animation: move3 .5s ease-in;
+    animation: move3 .3s ease-in;
   }
   @keyframes move3{
     0% {transform: translateX(-1800px);}
     100% {transform: translateX(-400px);}
   }
   .moveright-leave-active{
-    animation: move4 .5s ease-in;
+    animation: move4 .3s ease-in;
   }
   @keyframes move4{
     0% {transform: translateX(400px);}
     100% {transform: translateX(1800px);}
   }
   .fade-enter-active{
-    animation:fadein .2s ease-in;
+    animation:fadein .001s ease-in;
   }
   @keyframes fadein{
     0%{transform: translateX(400px)};
     100%{transform: translateX(-1000px)};
   }
   .fade-leave-active{
-    animation: fadeout .2s ease-in;
+    animation: fadeout .001s ease-in;
   }
   @keyframes fadeout{
     0%{transform: translateX(400px)};

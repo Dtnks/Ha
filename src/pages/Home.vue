@@ -1,17 +1,20 @@
 <script lang="ts" setup>
+defineOptions({
+    inheritAttrs:false
+})
 </script>
 
 <template>
     <div class="nav">
-        <RouterLink :to="{name:'a'}" active-class="active">菜品</RouterLink>
-        <RouterLink :to="{name:'b'}" active-class="active">b</RouterLink>
-        <RouterLink :to="{name:'c'}" active-class="active">c</RouterLink>
-        <RouterLink :to="{name:'d'}" active-class="active">d</RouterLink>
-        <RouterLink :to="{name:'e'}" active-class="active">e</RouterLink>
-        <RouterLink :to="{name:'f'}" active-class="active">f</RouterLink>
+        <RouterLink :to="{name:'a'}" active-class="active">首页</RouterLink>
+        <RouterLink :to="{name:'b'}" active-class="active">物料管理</RouterLink>
+        <RouterLink :to="{name:'c'}" active-class="active">商品管理</RouterLink>
+        <RouterLink :to="{name:'d'}" active-class="active">订单管理</RouterLink>
+        <RouterLink :to="{name:'e'}" active-class="active">员工管理</RouterLink>
+        <RouterLink :to="{name:'f'}" active-class="active">财务管理</RouterLink>
     </div>
     <div class="show">
-        <RouterView></RouterView>
+        <RouterView v-bind="$attrs"></RouterView>
     </div>
 </template>
 <style scoped>
@@ -23,14 +26,14 @@ template{
     flex:1;
     display: flex;
     flex-direction: column;
+    background: rgba(255,255,255, 0.25);
 }
 .nav a{
     background-color: rgba(255, 255, 255, 0.5);
     padding: 15px;
     color:black;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    border-top-right-radius: 80px;
-    border-bottom-right-radius: 50px;
+
     text-decoration: none;
 }
 .nav a.active{
@@ -38,6 +41,6 @@ template{
     color: white;
 }
 .show{
-    flex:7;
+    flex:8;
 }
 </style>
