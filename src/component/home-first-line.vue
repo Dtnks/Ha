@@ -3,12 +3,23 @@ defineProps(["linnear"])
 
 </script>
 <template>
-    <slot name="title"></slot>
-    <slot name="number"></slot>
-    <p>{{ $attrs }}</p>
+    <div class="back">
+        <div>
+            <slot name="title"></slot>
+        </div>
+        <hr>
+        <div>
+            <slot name="number"></slot>
+        </div>
+    </div>
 </template>
 <style scoped>
-template{
-    background-color:v-bind(linnear);
+.back{
+    display: flex;
+    flex-direction: column;
 }
+div{
+    margin: 20px;
+}
+
 </style>

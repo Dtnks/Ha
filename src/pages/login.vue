@@ -122,8 +122,6 @@
         draw()
     }
     onMounted(()=>{
-        console.log(1111)
-        console.log(document.querySelector(".valitext"))
         if (document.querySelector(".valitext")!==null)
             draw()})
 </script>

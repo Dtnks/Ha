@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { RouterView } from 'vue-router'
-  import {onMounted, reactive,ref,watch} from 'vue'
+  import { reactive,ref,watch,onBeforeUnmount,onMounted} from 'vue'
   import { useRouter } from 'vue-router';
   let router = useRouter()
   interface Theme{
@@ -8,17 +8,10 @@
   }
   let theme:Theme
   //模拟背景图片
-  let background=["../image/sea_sunset_horizon_131804_1280x720.jpg",'../image/wallhaven-43z8x3.jpg','../image/forest_mountains_moon_121180_1280x720.jpg','../image/autumn_forest_path_122375_1280x720.jpg','../image/bridge_river_flow_100663_1280x720.jpg','../image/eruption_lava_volcano_45542_1280x720.jpg','../image/sunset_sky_clouds_121865_1280x720.jpg']
+  let day_back=['../image/wallhaven-43z8x3.jpg','../image/autumn_forest_path_122375_1280x720.jpg','../image/bridge_river_flow_100663_1280x720.jpg','../image/sunset_sky_clouds_121865_1280x720.jpg']
+  let night_back=["../image/sea_sunset_horizon_131804_1280x720.jpg",'../image/forest_mountains_moon_121180_1280x720.jpg','../image/eruption_lava_volcano_45542_1280x720.jpg']
+  let background=day_back
   // 设置本地存储，避免因为刷新而更换背景
-  if (localStorage.getItem('theme')==null){
-    let rand = Math.random();
-    let max=background.length
-    rand=Math.floor(Math.random() * max);  
-    theme=reactive({background:background[rand],linnear:""})
-  }
-  else{
-    theme=reactive(JSON.parse(localStorage.getItem('theme') as string))
-  }
   //从背景图中抽取颜色，得到主题色
   function colormain(idname:string){
     let oImg = document.getElementById(idname) as HTMLCanvasElement;
@@ -39,12 +32,13 @@
     const colorList:stringKey = {} 
     let i = 0;
     while (i < pxArr.length) {
+    
     const r = pxArr[i];
     const g = pxArr[i + 1];
     const b = pxArr[i + 2];
     const a = pxArr[i + 3];
     //数字越大，计算的越快
-    i = i + 80000; 
+    i = i + 480000; 
     const key = [r,g,b,a].join(',')
     //判断颜色是否存在，存在则num+1，不存在则新加入字典
     key in colorList ? ++colorList[key] : (colorList[key] = 1)
@@ -87,11 +81,12 @@
     theme.background=background[rand]
     colormain("back")
     localStorage.setItem('theme',JSON.stringify(theme))
-    
   }
-  setInterval(changetheme,720000)
+  let timer:number
+  onMounted(()=>{timer=setInterval(changetheme,720000),colormain("back")
+  })
+  onBeforeUnmount(()=>{clearInterval(timer)})
   //每次改变的时候提取一次渐变色
-    
   let move=ref("")
   watch(()=>router.currentRoute.value.fullPath,(to,from)=>{
     if(to==="/login"){
@@ -104,6 +99,36 @@
       move.value="fade"
     }
   })
+  let value1=ref(true)
+  let value2=ref(true)
+  function backchange(to:boolean){
+    if (to){
+      background=day_back
+    }
+    else{
+      background=night_back
+    }
+    localStorage.setItem("background",JSON.stringify(background))
+    changetheme()
+  }
+  function timeinterchange(to:boolean){
+    if (to){
+      timer=setInterval(changetheme,7200),colormain("back")
+    }
+    else{
+      clearInterval(timer)
+    }
+  }
+  if (localStorage.getItem('theme')==null){
+    let rand = Math.random();
+    let max=background.length
+    rand=Math.floor(Math.random() * max);  
+    theme=reactive({background:background[rand],linnear:""})
+  }
+  else{
+    theme=reactive(JSON.parse(localStorage.getItem('theme') as string))
+  }
+  console.log(background)
 </script>
 
 <template>
@@ -116,6 +141,28 @@
           <component :is="Component" :key="$route.path" />
         </transition>
       </router-view>
+    </div>
+    <div id="options">
+      <el-switch
+        v-model="value1"
+        class="ml-2"
+        inline-prompt
+        size="large"
+        style="--el-switch-on-color:grey; --el-switch-off-color: black;"
+        active-text="日间模式"
+        inactive-text="夜间模式"
+        @change="backchange(value1)"
+      />
+      <el-switch
+        v-model="value2"
+        class="ml-2"
+        size="large"
+        inline-prompt
+        style="--el-switch-on-color: grey; --el-switch-off-color: black"
+        active-text="自动切换"
+        inactive-text="停止切换"
+        @change="timeinterchange(value2)"
+      />
     </div>
   
     
