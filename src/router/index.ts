@@ -47,7 +47,6 @@ const router = createRouter({
           path:'f',
           component:F,
         },
-
         {
             path:"/home",
             redirect:"/home/a"

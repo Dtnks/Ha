@@ -1,9 +1,23 @@
 <script lang="ts" setup>
 import firstLine from '../component/home-first-line.vue'
 defineProps(["linnear"])
+import {ref} from "vue"
+let name=ref("管理员姓名")
+let rate=ref("权限等级")
 </script>
 <template>
     <div class="control">
+        <div id="header">
+            <h2 style="padding-top: 15px ;">首页</h2>
+            <div id="person">
+                <img src="">
+                <div id="col">
+                    <p>{{ name }}</p>
+                    <p>{{ rate }}</p>
+                </div>
+            </div>
+        </div>
+        <hr>
         <div id="first-line">
             <firstLine :linnear="linnear" class="first-line">
                 <template v-slot:title>总点单量</template>
@@ -50,6 +64,12 @@ defineProps(["linnear"])
     display: flex;
     flex-direction: column;
 }
+#header{
+    display: flex;
+    flex-direction: row;
+    padding: 15px 15px 5px 15px;
+    justify-content: space-between;
+}
 #first-line,#second-line,#third-line{
     display: flex;
     flex-direction: row;
@@ -57,11 +77,37 @@ defineProps(["linnear"])
     justify-content: space-between;
 }
 .first-line{
-    background-image:linear-gradient(60deg,v-bind(linnear));
+    background-image:linear-gradient(90deg,v-bind(linnear));
     background-size: 250%;
     color: white;
     padding: 15px;
     flex: 1;
     border-radius: 10px;
 }
+@keyframes scale{
+    0% {
+        background-position: 0%;
+        scale: 1;
+    }
+    50%{
+        background-position: 200%;
+        scale: 1.1;
+    }
+    100%{
+        background-position: 400%;
+        scale: 1;
+    }
+} 
+@keyframes animate{
+        from {
+            background-position: 0%;
+        }
+        to{
+            background-position: 400%;
+        }
+    } 
+.first-line:hover{
+    animation: scale .5s ease-in-out,animate 8s linear infinite;
+}
+
 </style>

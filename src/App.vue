@@ -38,7 +38,7 @@
     const b = pxArr[i + 2];
     const a = pxArr[i + 3];
     //数字越大，计算的越快
-    i = i + 480000; 
+    i = i + 240000; 
     const key = [r,g,b,a].join(',')
     //判断颜色是否存在，存在则num+1，不存在则新加入字典
     key in colorList ? ++colorList[key] : (colorList[key] = 1)
@@ -49,23 +49,24 @@
         rgba: `rgba(${key})`,
         num: colorList[key]
     })}
+    
     arr = arr.sort((a,b) => b.num - a.num)
     //随机抽取颜色列表
     let range=arr.length-1
     let distance=0
     //避免渐变色相近
-    let Rand1:number=0
-    let Rand2:number=0
-    while(distance<100)
+    let Rand1:number
+    let Rand2:number
+    do
     {
-      Rand1=Math.round(Math.random()*range)
-		  Rand2=Math.round(Math.random()*range)
+      Rand1=Math.floor(Math.random()*range)+1
+		  Rand2=Math.floor(Math.random()*range)+1
       let rgb=arr[Rand1].rgba.split(",")
       let a =Number(rgb[0].split("(")[1]),b=Number(rgb[1]),c=Number(rgb[2])
       rgb=arr[Rand2].rgba.split(",")
       let d =Number(rgb[0].split("(")[1]),e=Number(rgb[1]),f=Number(rgb[2])
       distance=Math.abs(a-d)+Math.abs(b-e)+Math.abs(c-f)
-    }
+    }while(distance<100)
     theme.linnear=arr[Rand2].rgba+','+arr[Rand1].rgba+','+arr[Rand2].rgba
     })  
   }
@@ -142,30 +143,28 @@
         </transition>
       </router-view>
     </div>
-    <div id="options">
-      <el-switch
-        v-model="value1"
-        class="ml-2"
-        inline-prompt
-        size="large"
-        style="--el-switch-on-color:grey; --el-switch-off-color: black;"
-        active-text="日间模式"
-        inactive-text="夜间模式"
-        @change="backchange(value1)"
-      />
-      <el-switch
-        v-model="value2"
-        class="ml-2"
-        size="large"
-        inline-prompt
-        style="--el-switch-on-color: grey; --el-switch-off-color: black"
-        active-text="自动切换"
-        inactive-text="停止切换"
-        @change="timeinterchange(value2)"
-      />
-    </div>
-  
-    
+</div>
+<div id="options">
+  <el-switch
+    v-model="value1"
+    class="ml-2"
+    inline-prompt
+    size="large"
+    style="--el-switch-on-color:grey; --el-switch-off-color: black;"
+    active-text="日间模式"
+    inactive-text="夜间模式"
+    @change="backchange(value1)"
+  />
+  <el-switch
+    v-model="value2"
+    class="ml-2"
+    size="large"
+    inline-prompt
+    style="--el-switch-on-color: grey; --el-switch-off-color: black"
+    active-text="自动切换"
+    inactive-text="停止切换"
+    @change="timeinterchange(value2)"
+  />
 </div>
 </template>
 <style scoped>
@@ -176,9 +175,6 @@
     object-fit: fill;
     z-index: -1;
     background-size:auto;
-  }
-  .high{
-    height: 100%;
   }
   #app{
     position: absolute;
@@ -259,5 +255,14 @@
     border-bottom-right-radius: 10px;
     padding: 10px 15px;
     margin: 0px 10px;
+  }
+  #options{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    height: 100px;
+    bottom: 20px;
+    left: 20px;
+    z-index: 100;
   }
 </style>
