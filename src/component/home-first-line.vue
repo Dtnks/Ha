@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 defineProps(["linnear"])
-
 </script>
 <template>
     <div class="back">
@@ -19,7 +18,7 @@ defineProps(["linnear"])
     flex-direction: column;
 }
 div{
-    margin: 20px;
+    margin-bottom: 20px;
 }
 
 </style>

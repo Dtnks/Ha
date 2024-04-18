@@ -8,8 +8,8 @@
   }
   let theme:Theme
   //模拟背景图片
-  let day_back=['../image/wallhaven-43z8x3.jpg','../image/autumn_forest_path_122375_1280x720.jpg','../image/bridge_river_flow_100663_1280x720.jpg','../image/sunset_sky_clouds_121865_1280x720.jpg']
-  let night_back=["../image/sea_sunset_horizon_131804_1280x720.jpg",'../image/forest_mountains_moon_121180_1280x720.jpg','../image/eruption_lava_volcano_45542_1280x720.jpg']
+  let day_back=['../image/v2-eb0d1de66109345c19acb153a800bdd2_r.jpg','../image/anime-anime-girls-Furina-Genshin-Impact-Genshin-Impact-2291772-wallhere.com.jpg','../image/wallhaven-43z8x3.jpg','../image/autumn_forest_path_122375_1280x720.jpg','../image/bridge_river_flow_100663_1280x720.jpg','../image/sunset_sky_clouds_121865_1280x720.jpg']
+  let night_back=["../image/img1.wallspic.com-ryomen_ta_de_jiao-ka_tong-yi_shu-chuang_kou-hen_ku_de-3840x2160.jpg","../image/sea_sunset_horizon_131804_1280x720.jpg",'../image/forest_mountains_moon_121180_1280x720.jpg','../image/eruption_lava_volcano_45542_1280x720.jpg']
   let background=day_back
   // 设置本地存储，避免因为刷新而更换背景
   //从背景图中抽取颜色，得到主题色
@@ -114,7 +114,7 @@
   }
   function timeinterchange(to:boolean){
     if (to){
-      timer=setInterval(changetheme,7200),colormain("back")
+      timer=setInterval(changetheme,720000),colormain("back")
     }
     else{
       clearInterval(timer)
@@ -129,7 +129,6 @@
   else{
     theme=reactive(JSON.parse(localStorage.getItem('theme') as string))
   }
-  console.log(background)
 </script>
 
 <template>
@@ -138,34 +137,34 @@
     <div class="show">
       <router-view v-slot="{ Component, route }" :linnear="theme.linnear" >
         <!-- 使用任何自定义过渡和回退到 `fade` -->
-        <transition :name="move" >
+        <transition :name="move" mode="out-in">
           <component :is="Component" :key="$route.path" />
         </transition>
       </router-view>
     </div>
 </div>
 <div id="options">
-  <el-switch
-    v-model="value1"
-    class="ml-2"
-    inline-prompt
-    size="large"
-    style="--el-switch-on-color:grey; --el-switch-off-color: black;"
-    active-text="日间模式"
-    inactive-text="夜间模式"
-    @change="backchange(value1)"
-  />
-  <el-switch
-    v-model="value2"
-    class="ml-2"
-    size="large"
-    inline-prompt
-    style="--el-switch-on-color: grey; --el-switch-off-color: black"
-    active-text="自动切换"
-    inactive-text="停止切换"
-    @change="timeinterchange(value2)"
-  />
-</div>
+      <el-switch
+        v-model="value1"
+        class="ml-2"
+        inline-prompt
+        size="large"
+        style="--el-switch-on-color:grey; --el-switch-off-color: black;"
+        active-text="日间模式"
+        inactive-text="夜间模式"
+        @change="backchange(value1)"
+      />
+      <el-switch
+        v-model="value2"
+        class="ml-2"
+        size="large"
+        inline-prompt
+        style="--el-switch-on-color: grey; --el-switch-off-color: black"
+        active-text="自动切换"
+        inactive-text="停止切换"
+        @change="timeinterchange(value2)"
+      />
+    </div>
 </template>
 <style scoped>
   #back{
@@ -202,43 +201,36 @@
     animation: move1 .3s ease-in;
   }
   @keyframes move1{
-    0% {transform: translateX(1000px);}
-    100% {transform: translateX(-400px);}
+    0% {transform: translateX(1200px);}
+    100% {transform: translateX(0px);}
   }
   .moveleft-leave-active{
     animation: move2 .3s ease-in;
   }
   @keyframes move2{
-    0% {transform: translateX(400px);}
-    100% {transform: translateX(-1000px);}
+    0% {transform: translateX(0px);}
+    100% {transform: translateX(-1200px);}
   }
   .moveright-enter-active{
     animation: move3 .3s ease-in;
   }
   @keyframes move3{
-    0% {transform: translateX(-1800px);}
-    100% {transform: translateX(-400px);}
+    0% {transform: translateX(-1200px);}
+    100% {transform: translateX(0px);}
   }
   .moveright-leave-active{
     animation: move4 .3s ease-in;
   }
   @keyframes move4{
-    0% {transform: translateX(400px);}
-    100% {transform: translateX(1800px);}
-  }
-  .fade-enter-active{
-    animation:fadein .001s ease-in;
-  }
-  @keyframes fadein{
-    0%{transform: translateX(400px)};
-    100%{transform: translateX(-1000px)};
+    0% {transform: translateX(0px);}
+    100% {transform: translateX(1200px);}
   }
   .fade-leave-active{
-    animation: fadeout .001s ease-in;
+    animation: fadeout .5s ease-in;
   }
   @keyframes fadeout{
-    0%{transform: translateX(400px)};
-    100%{transform: translateX(400px)};
+    0% {transform: translateY(0px);}
+    100% {transform: translateY(-1200px);}
   }
   #theme ul{
     display: flex;
