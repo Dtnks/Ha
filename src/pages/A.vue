@@ -3,6 +3,7 @@ import type { EChartsOption } from 'echarts';
 import firstLine from '../component/home-first-line.vue'
 import person from '../component/person.vue'
 import * as echarts from 'echarts';
+import Header from '../component/header.vue'
 defineProps(["linnear"])
 import {ref,onMounted} from "vue"
 interface employee{
@@ -21,22 +22,42 @@ let person3:employee={
     name:"杨小不黑不白",
     position:"外卖员"
 }
-let first_chart:HTMLElement
-let second_chart:HTMLElement
 let myChart:echarts.ECharts
 let myChart1:echarts.ECharts
+let myChart2:echarts.ECharts
+let myChart3:echarts.ECharts
 let option:EChartsOption
 let option1:EChartsOption
+let option2:EChartsOption
+let option3:EChartsOption
 onMounted(()=>{
-    first_chart=document.getElementById("first-chart")!
-    second_chart=document.getElementById("second-chart")!
-    myChart=echarts.init(first_chart)
-    myChart1=echarts.init(second_chart)
+    //路由切换的时候，会出现echart不显示，原因如下：
+    // 如果未实例化 的盒子则进行 实例化,在此期间会在div容器生成一个 _echarts_instance_ 属性，
+    // 该属性值就是当前echarts的ID,然后进入后边的渲染操作流程
+    // 当 经过 切换路由 在回来时， echarts的ID就回到初始状态， 所以 和 原先的 指定id 的 div 的_echarts_instance_属性值就不匹配了，
+    // 所以我们需要 让 指定id 的 div 的_echarts_instance_属性值也要进入一个 初始状态， 即 空状态。
+    //所以在使用前把元素的_echarts_instance_属性清空
+    document.getElementById("first-chart")!.removeAttribute('_echarts_instance_');
+    document.getElementById("second-chart")!.removeAttribute('_echarts_instance_');
+    document.getElementById("one")!.removeAttribute('_echarts_instance_');
+    document.getElementById("two")!.removeAttribute('_echarts_instance_');
+    myChart=echarts.init(document.getElementById("first-chart")!)
+    myChart1=echarts.init(document.getElementById("second-chart")!)
+    myChart2=echarts.init(document.getElementById("one")!)
+    myChart3=echarts.init(document.getElementById("two")!)
     option= {
         title: {
           text: "物料管理",
         },
-        tooltip: {},
+        toolbox: {
+            show: true,
+            feature: {
+            mark: { show: true },
+            dataView: { show: true, readOnly: false },
+            restore: { show: true },
+            saveAsImage: { show: true }
+            }
+        },
         legend: {
             data: ["储备量","警戒量"],
             orient: 'horizontal',
@@ -67,9 +88,18 @@ onMounted(()=>{
         },
         legend: {
             data: ["点单量"],
-            bottom: 10,
+            show:true,
+            bottom:10
             },
-        tooltip: {},
+            toolbox: {
+            show: true,
+            feature: {
+            mark: { show: true },
+            dataView: { show: true, readOnly: false },
+            restore: { show: true },
+            saveAsImage: { show: true }
+            }
+        },
         xAxis: {
             type: 'category',
             data: ['一月', '二月', '三月','四月','五月','六月']
@@ -80,35 +110,114 @@ onMounted(()=>{
         series: [
             {
             data: [10,20,15,26,34,28],
-            type: 'line'
+            type: 'line',
+            name:"点单量"
             }
         ]
-    };
+        };
+    option2 = {
+        title:{
+            text:"开支和收入情况占比"
+        },
+        toolbox: {
+            show: true,
+            feature: {
+            mark: { show: true },
+            dataView: { show: true, readOnly: false },
+            restore: { show: true },
+            saveAsImage: { show: true }
+            }
+        },
+        legend: {
+            data: ["员工薪资","设备维护","物料采购","场地租金","折损消耗"],
+            orient: 'horizontal',
+            bottom:0
+            },
+        series: [
+            {
+            type: 'pie',
+            radius: ['50%', '70%'],
+            avoidLabelOverlap: false,
+            label: {
+                show: false,
+                position: 'center'
+            },
+            labelLine: {
+                show: false
+            },
+            emphasis: {
+                label: {
+                show: true,
+                fontSize: '30',
+                fontWeight: 'bold'
+                }
+            },
+            padAngle: 5,
+            data: [
+                { value: 335, name: '员工薪资' },
+                { value: 310, name: '设备维护' },
+                { value: 234, name: '物料采购' },
+                { value: 135, name: '场地租金' },
+                { value: 1548, name: '折损消耗' }
+            ]
+            }
+        ]
+        };
+    option3 = {
+        legend: {
+            top: 'bottom'
+        },
+        toolbox: {
+            show: true,
+            feature: {
+            mark: { show: true },
+            dataView: { show: true, readOnly: false },
+            restore: { show: true },
+            saveAsImage: { show: true }
+            }
+        },
+        series: [
+            {
+            name: 'Nightingale Chart',
+            type: 'pie',
+            center: ['50%', '50%'],
+            roseType: 'area',
+            itemStyle: {
+                borderRadius: 8
+            },
+            data: [
+                { value: 17, name: '产品6' },
+                { value: 21, name: '产品3' },
+                { value: 34, name: '产品4' },
+                { value: 40, name: '产品1' },
+                { value: 45, name: '产品2' },
+                { value: 54, name: '产品5' },
+            ]
+            }
+        ]
+        };
     myChart.setOption(option);
     myChart1.setOption(option1);
+    myChart2.setOption(option2);
+    myChart3.setOption(option3)
 })
-console.log(111)
 let name=ref("管理员姓名")
 let rate=ref("权限等级")
 let month=ref("三")
 window.addEventListener('resize',()=>{
     myChart.resize()
     myChart1.resize()
+    myChart2.resize()
+    myChart3.resize()
 })
 </script>
 <template>
-    <div class="control">
-        <div id="header">
-            <h2 style="padding-top: 15px;">首页</h2>
-            <div id="person">
-                <img src="">
-                <div>
-                    <p>{{ name }}</p>
-                    <p>{{ rate }}</p>
-                </div>
-            </div>
-        </div>
-        <hr>
+    <div id="control">
+        <Header>
+            <template v-slot:pagename>首页</template>
+            <template v-slot:name>{{}}</template>
+            <template v-slot:rate>{{  }}</template>
+        </Header>
         <div id="first-line">
             <firstLine :linnear="linnear" class="first-line">
                 <template v-slot:title>总点单量</template>
@@ -182,7 +291,7 @@ window.addEventListener('resize',()=>{
 </template>
 
 <style scoped>
-.control{
+#control{
     background-color: rgba(255, 255, 255, 0.3);
     overflow-y: scroll;
     height: 100%;

@@ -115,11 +115,13 @@
       background=night_back
     }
     localStorage.setItem("background",JSON.stringify(background))
-    changetheme()
+    //防止按钮滑动不连畅，缺点是没法快速连点
+    setTimeout(()=>changetheme(),400)
   }
   //是否自动切换背景
   function timeinterchange(to:boolean){
     if (to){
+      setTimeout(()=>changetheme(),400)
       timer=setInterval(changetheme,720000),colormain("back")
     }
     else{
