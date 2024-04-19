@@ -203,7 +203,6 @@ onMounted(()=>{
 })
 let name=ref("管理员姓名")
 let rate=ref("权限等级")
-let month=ref("三")
 window.addEventListener('resize',()=>{
     myChart.resize()
     myChart1.resize()
@@ -246,7 +245,7 @@ window.addEventListener('resize',()=>{
             <div id="first-list">
                 <h3 style="margin-bottom: 10px;">最新表单列表：</h3>
                 <table id="list-one">
-                        <tr>第{{month}}季度财报</tr>
+                        <tr>第三季度财报</tr>
                         <tr>1 WordPress Install</tr>
                         <tr>25,000 visits/mo.</tr>
                         <tr>Unlimited Data Transfer</tr>
