@@ -2,23 +2,26 @@
 defineOptions({
     inheritAttrs:false
 })
+import routers from '../router'
 </script>
 
 <template>
-    <div class="nav">
-        <div id="logo">
-            <p>“哈大饼”</p>
-            <p>管理平台</p>
+    <div style="height: 100%;width: 100%;display: flex;flex-direction: row;">
+        <div class="nav">
+            <div id="logo">
+                <p>“哈大饼”</p>
+                <p>管理平台</p>
+            </div>
+            <RouterLink :to="{name:'a'}" active-class="active">首页</RouterLink>
+            <RouterLink :to="{name:'b'}" active-class="active">物料管理</RouterLink>
+            <RouterLink :to="{name:'c'}" active-class="active">商品管理</RouterLink>
+            <RouterLink :to="{name:'d'}" active-class="active">订单管理</RouterLink>
+            <RouterLink :to="{name:'e'}" active-class="active">员工管理</RouterLink>
+            <RouterLink :to="{name:'f'}" active-class="active">财务管理</RouterLink>
         </div>
-        <RouterLink :to="{name:'a'}" active-class="active">首页</RouterLink>
-        <RouterLink :to="{name:'b'}" active-class="active">物料管理</RouterLink>
-        <RouterLink :to="{name:'c'}" active-class="active">商品管理</RouterLink>
-        <RouterLink :to="{name:'d'}" active-class="active">订单管理</RouterLink>
-        <RouterLink :to="{name:'e'}" active-class="active">员工管理</RouterLink>
-        <RouterLink :to="{name:'f'}" active-class="active">财务管理</RouterLink>
-    </div>
-    <div class="show">
-        <RouterView v-bind="$attrs"></RouterView>
+        <div class="show">
+            <RouterView v-bind="$attrs"></RouterView>
+        </div>
     </div>
 </template>
 <style scoped>
@@ -56,6 +59,7 @@ template{
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+    cursor: pointer;
     font-style: italic;
 }
 #logo p{
@@ -66,6 +70,6 @@ template{
 	-webkit-background-clip: text;
 	text-transform: uppercase;
 	font-size: 24px;
-	margin: 5px 0;
+	margin: 10px 0;
 }
 </style>

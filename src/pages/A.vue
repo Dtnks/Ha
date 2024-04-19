@@ -1,15 +1,37 @@
 <script lang="ts" setup>
 import type { EChartsOption } from 'echarts';
 import firstLine from '../component/home-first-line.vue'
+import person from '../component/person.vue'
 import * as echarts from 'echarts';
 defineProps(["linnear"])
 import {ref,onMounted} from "vue"
+interface employee{
+    name:string,
+    position:string
+}
+let person1:employee={
+    name:"杨小黑",
+    position:"外卖员"
+}
+let person2:employee={
+    name:"杨小白",
+    position:"店员"
+}
+let person3:employee={
+    name:"杨小不黑不白",
+    position:"外卖员"
+}
 let first_chart:HTMLElement
+let second_chart:HTMLElement
 let myChart:echarts.ECharts
+let myChart1:echarts.ECharts
 let option:EChartsOption
+let option1:EChartsOption
 onMounted(()=>{
     first_chart=document.getElementById("first-chart")!
+    second_chart=document.getElementById("second-chart")!
     myChart=echarts.init(first_chart)
+    myChart1=echarts.init(second_chart)
     option= {
         title: {
           text: "物料管理",
@@ -39,7 +61,31 @@ onMounted(()=>{
           },
         ],
         };
+    option1 = {
+        title: {
+          text: "销量统计",
+        },
+        legend: {
+            data: ["点单量"],
+            bottom: 10,
+            },
+        tooltip: {},
+        xAxis: {
+            type: 'category',
+            data: ['一月', '二月', '三月','四月','五月','六月']
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+            data: [10,20,15,26,34,28],
+            type: 'line'
+            }
+        ]
+    };
     myChart.setOption(option);
+    myChart1.setOption(option1);
 })
 console.log(111)
 let name=ref("管理员姓名")
@@ -47,6 +93,7 @@ let rate=ref("权限等级")
 let month=ref("三")
 window.addEventListener('resize',()=>{
     myChart.resize()
+    myChart1.resize()
 })
 </script>
 <template>
@@ -100,9 +147,24 @@ window.addEventListener('resize',()=>{
             <div id="second-list">
                 <h3 style="margin-bottom: 10px;">正在作业员工</h3>
                 <table id="list-one">
-                        <tr>{{  }}</tr>
-                        <tr>1 WordPress Install</tr>
-                        <tr>25,000 visits/mo.</tr>
+                        <tr>
+                            <person>
+                                <template v-slot:name>{{ person1.name }}</template>
+                                <template v-slot:position>{{ person1.position }}</template>
+                            </person>
+                        </tr>
+                        <tr>
+                            <person>
+                                <template v-slot:name>{{ person2.name }}</template>
+                                <template v-slot:position>{{ person2.position }}</template>
+                            </person>
+                        </tr>
+                        <tr>
+                            <person>
+                                <template v-slot:name>{{ person3.name }}</template>
+                                <template v-slot:position>{{ person3.position }}</template>
+                            </person>
+                        </tr>
                 </table>
             </div>
         </div>
@@ -160,7 +222,7 @@ window.addEventListener('resize',()=>{
     margin: 15px;
     border-radius: 10px;
 }
-#second-line div,#third-line div{
+#first-chart,#first-list,#second-chart,#second-list,#two-chart{
     padding: 15px;
     margin: 15px;
     border-radius: 10px;
@@ -230,6 +292,7 @@ window.addEventListener('resize',()=>{
 }
 #list-one{
     flex: 1;
+    width: 100%;
 }
 #list-one tr:hover{
     font-weight: bold;

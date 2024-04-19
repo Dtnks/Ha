@@ -89,19 +89,24 @@
   onBeforeUnmount(()=>{clearInterval(timer)})
   //每次改变的时候提取一次渐变色
   let move=ref("")
+  //监视路由转化，加入对应的动画效果
   watch(()=>router.currentRoute.value.fullPath,(to,from)=>{
-    if(to==="/login"){
+    if(to==="/login" && from==="/signin"){
       move.value="moveleft"
     }
-    if(to==="/signin"){
+    else if(to==="/signin" && from==="/login"){
       move.value="moveright"
     }
-    if(to==="/home/a"){
+    else if(to==="/home/a" && from==="/login"){
       move.value="fade"
+    }
+    else{
+      move.value=''
     }
   })
   let value1=ref(true)
   let value2=ref(true)
+  //切换背景的列表
   function backchange(to:boolean){
     if (to){
       background=day_back
@@ -112,6 +117,7 @@
     localStorage.setItem("background",JSON.stringify(background))
     changetheme()
   }
+  //是否自动切换背景
   function timeinterchange(to:boolean){
     if (to){
       timer=setInterval(changetheme,720000),colormain("back")
@@ -120,6 +126,7 @@
       clearInterval(timer)
     }
   }
+  //判断浏览器本地有没有存下theme，并对应读取或初始化
   if (localStorage.getItem('theme')==null){
     let rand = Math.random();
     let max=background.length
