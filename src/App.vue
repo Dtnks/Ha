@@ -151,29 +151,29 @@
         </transition>
       </router-view>
     </div>
-</div>
-<div id="options">
-      <el-switch
-        v-model="value1"
-        class="ml-2"
-        inline-prompt
-        size="large"
-        style="--el-switch-on-color:grey; --el-switch-off-color: black;"
-        active-text="日间模式"
-        inactive-text="夜间模式"
-        @change="backchange(value1)"
-      />
-      <el-switch
-        v-model="value2"
-        class="ml-2"
-        size="large"
-        inline-prompt
-        style="--el-switch-on-color: grey; --el-switch-off-color: black"
-        active-text="自动切换"
-        inactive-text="停止切换"
-        @change="timeinterchange(value2)"
-      />
-    </div>
+  </div>
+  <div id="options">
+    <el-switch
+      v-model="value1"
+      class="ml-2"
+      inline-prompt
+      size="large"
+      style="--el-switch-on-color:grey; --el-switch-off-color: black;"
+      active-text="日间模式"
+      inactive-text="夜间模式"
+      @change="backchange(value1)"
+    />
+    <el-switch
+      v-model="value2"
+      class="ml-2"
+      size="large"
+      inline-prompt
+      style="--el-switch-on-color: grey; --el-switch-off-color: black"
+      active-text="自动切换"
+      inactive-text="停止切换"
+      @change="timeinterchange(value2)"
+    />
+  </div>
 </template>
 <style scoped>
   #back{
@@ -190,7 +190,7 @@
     width: 100%;
     text-align: center;
     display: flex;
-    min-width: 1200px;
+    min-width: 1400px;
     min-height: 800px;
     flex-direction: column;
   }
@@ -198,7 +198,6 @@
     flex:1;
     display: flex;
     justify-content: center;
-    z-index: 90;
     margin-top: auto;
     border-radius: 5px;
     height: auto;

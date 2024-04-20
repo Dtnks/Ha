@@ -225,10 +225,10 @@
         font-size: 14px;
     }
     .right a{
-    width: 70%;
-    text-decoration: none;
-    color: white;
-    font-weight: bold;
+        width: 70%;
+        text-decoration: none;
+        color: white;
+        font-weight: bold;
     }
     .valitext{
         min-width: 100px;

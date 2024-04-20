@@ -120,6 +120,7 @@
         display: flex;
         justify-content: space-around;
         flex-direction: column;
+        padding: 0 15px;
         background-color:#f0f0f0  ;
     }
     .left{
