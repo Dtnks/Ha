@@ -19,6 +19,7 @@ defineProps(["linnear"])
 }
 div{
     margin-bottom: 20px;
+    cursor: default;
 }
 
 </style>

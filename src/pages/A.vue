@@ -130,8 +130,9 @@ onMounted(()=>{
         },
         legend: {
             data: ["员工薪资","设备维护","物料采购","场地租金","折损消耗"],
-            orient: 'horizontal',
-            bottom:0
+            orient: 'vertical',
+            left:0,
+            top:40
             },
         series: [
             {
@@ -165,7 +166,8 @@ onMounted(()=>{
         };
     option3 = {
         legend: {
-            top: 'bottom'
+            orient:"vertical",
+            left:0
         },
         toolbox: {
             show: true,

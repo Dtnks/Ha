@@ -1,17 +1,16 @@
 <script lang="ts" setup>
 import Header from '../component/header.vue'
-import {ref} from 'vue'
+import {reactive, ref,onMounted} from 'vue'
 let isactive=ref(false)
 function changeclass(){
     isactive.value=!isactive.value
     console.log(11111)
 }
 let content=ref("")
-const name=ref("")
-const amount=ref("")
-const kind=ref("")
-const time=ref("")
-const time_keep=ref("")
+interface ListItem {
+  value: string
+  label: string
+}
 let option1=[
     {
         value:"糖浆",
@@ -88,6 +87,47 @@ let option4=[
         label:"三年"
     },
 ]
+
+const list = ref<ListItem[]>([])
+const option5 = ref<ListItem[]>([])
+const value = ref<string[]>([])
+const loading = ref(false)
+const states = [
+  'Alabama',
+  'Alaska',
+  'Arizona',
+  'Arkansas',
+  'California',]
+onMounted(() => {
+  list.value = states.map((item) => {
+    return { value: `value:${item}`, label: `label:${item}` }
+  })
+})
+
+const remoteMethod = (query: string) => {
+  if (query) {
+    loading.value = true
+    setTimeout(() => {
+      loading.value = false
+      option5.value = list.value.filter((item) => {
+        return item.label.toLowerCase().includes(query.toLowerCase())
+      })
+    }, 200)
+  } else {
+    option5.value = []
+  }
+}
+//只能用const否则页面会报错，不知道为啥
+const form=reactive({
+    name:"",
+    amount:"",
+    kind:"",
+    time:"",
+    time_keep:"",
+    adress:"",
+    price:"",
+    prices:""
+})
 </script>
 <template>
     <div id="control">
@@ -116,84 +156,143 @@ let option4=[
                         </form>
                     </div>
                 </div>
-                <div id="work">
-                    <p>物料名称</p>
-                    <el-select
-                        v-model="name"
-                        clearable
-                        placeholder="Select"
-                        style="width: 320px;"
-                        >
-                        <el-option
-                        v-for="item in option1"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                        />
-                    </el-select>
-                    <div id="line1">
-                        <div>
+                <el-form id="work" :model="form" label-width="auto" style="max-width: 600px">
+                    <div class="col">
+                        <p>物料名称</p>
+                        <el-form-item prop="Name">
+                            <el-select
+                            v-model="form.name"
+                            clearable
+                            placeholder="Select"
+                            style="width: 320px;"
+                            >
+                            <el-option
+                            v-for="item in option1"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                            />
+                            </el-select>
+                        </el-form-item>
+                    </div>
+                    <div class="line">
+                        <div class="col">
                             <p>变化数量</p>
-                            <el-select
-                            v-model="amount"
-                            clearable
-                            placeholder="Select"
-                            style="width: 120px;"
-                            >
-                            <el-option
-                            v-for="item in option2"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
-                            />
-                            </el-select>
+                            <el-form-item prop="Amount">
+                                <el-select
+                                v-model="form.amount"
+                                clearable
+                                placeholder="Select"
+                                style="width: 150px;"
+                                >
+                                <el-option
+                                v-for="item in option2"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
+                                />
+                                </el-select>
+                            </el-form-item>
                         </div>
-                        <div>
+                        <div class="col">
                             <p>变动类型</p>
-                            <el-select
-                            v-model="kind"
-                            clearable
-                            placeholder="Select"
-                            style="width: 180px;"
-                            >
-                            <el-option
-                            v-for="item in option3"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
-                            />
-                            </el-select>
+                            <el-form-item prop="Kind">
+                                <el-select
+                                v-model="form.kind"
+                                clearable
+                                placeholder="Select"
+                                style="width: 155px;"
+                                >
+                                <el-option
+                                v-for="item in option3"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
+                                />
+                                </el-select>
+                            </el-form-item>
                         </div>
                     </div>
-                    <div id="line2">
-                        <div>
-                            <p style="margin-bottom: 10px;">生产日期</p>
-                            <el-date-picker
-                                v-model="time"
-                                type="date"
-                                placeholder="Pick a day"
-                                size="default"
-                                style="width: 180px;"
-                            />
+                    <div class="line">
+                        <div class="col">
+                            <p>生产日期</p>
+                            <el-form-item prop="Time">
+                                <el-date-picker
+                                    v-model="form.time"
+                                    type="date"
+                                    placeholder="Pick a day"
+                                    size="default"
+                                    style="width: 170px;"
+                                />
+                            </el-form-item>
                         </div>
-                        <div>
+                        <div class="col">
                             <p>保质期</p>
+                            <el-form-item prop="Time_keep">
+                                <el-select
+                                v-model="form.time_keep"
+                                clearable
+                                placeholder="Select"
+                                style="width: 135px;"
+                                >
+                                <el-option
+                                v-for="item in option4"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
+                                />
+                                </el-select>
+                            </el-form-item>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <p>物料来源</p>
+                        <el-form-item prop="Adress">
                             <el-select
-                            v-model="time_keep"
-                            clearable
-                            placeholder="Select"
-                            style="width: 140px;"
-                            >
+                            v-model="form.adress"
+                            multiple
+                            filterable
+                            remote
+                            reserve-keyword
+                            placeholder="Please enter a keyword"
+                            :remote-method="remoteMethod"
+                            :loading="loading"
+                            style="width: 415px"
+                        >
                             <el-option
-                            v-for="item in option4"
+                            v-for="item in option5"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value"
                             />
-                            </el-select>
+                        </el-select>
+                        </el-form-item>
+                    </div>
+                    <div class="line">
+                        <div class="col">
+                            <p>单价</p>
+                            <el-form-item prop="price">
+                                <el-input
+                                v-model="form.price"
+                                style="width: 200px"
+                                placeholder="Please input"
+                                clearable
+                            />
+                            </el-form-item>
+                        </div>
+                        <div class="col">
+                            <p>总价</p>
+                            <el-form-item prop="prices">
+                                <el-input
+                                v-model="form.prices"
+                                style="width: 200px"
+                                placeholder="Please input"
+                                clearable
+                            />
+                            </el-form-item>
                         </div>
                     </div>
-                </div>
+                </el-form>
             </div>
         </div>
     </div>
@@ -338,12 +437,18 @@ let option4=[
 .close::after {
   transform: rotate(45deg);
 }
-#line1,#line2{
+.line{
     display: flex;
     flex-direction: row;
 }
-#work div{
-    margin-top: 10px;
-    margin-right: 10px;
+.col{
+    display: flex;
+    flex-direction: column;
+    margin-right: 15px;
+}
+.col p{
+    margin-bottom: 10px;
+    font-size: 14px;
+    cursor:default;
 }
 </style>
