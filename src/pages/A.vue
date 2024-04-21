@@ -49,6 +49,7 @@ onMounted(()=>{
         title: {
           text: "物料管理",
         },
+        tooltip:{},
         toolbox: {
             show: true,
             feature: {
@@ -86,6 +87,7 @@ onMounted(()=>{
         title: {
           text: "销量统计",
         },
+        tooltip:{},
         legend: {
             data: ["点单量"],
             show:true,
@@ -119,6 +121,7 @@ onMounted(()=>{
         title:{
             text:"开支和收入情况占比"
         },
+        tooltip:{},
         toolbox: {
             show: true,
             feature: {
@@ -169,6 +172,7 @@ onMounted(()=>{
             orient:"vertical",
             left:0
         },
+        tooltip:{},
         toolbox: {
             show: true,
             feature: {
