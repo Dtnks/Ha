@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import Header from '../component/header.vue'
 import {reactive, ref,onMounted} from 'vue'
+defineProps(["linnear"])
 let isactive=ref(false)
 function changeclass(){
     isactive.value=!isactive.value
@@ -87,7 +88,12 @@ let option4=[
         label:"三年"
     },
 ]
-
+let option6=[
+    {
+        value:"SD-CJSNDK676",
+        label:"SD-CJSNDK676"
+    }
+]
 const list = ref<ListItem[]>([])
 const option5 = ref<ListItem[]>([])
 const value = ref<string[]>([])
@@ -126,8 +132,15 @@ const form=reactive({
     time_keep:"",
     adress:"",
     price:"",
-    prices:""
+    prices:"",
+    storage:"",
+    time_change:"",
+    person:"",
+    text:""
 })
+function submitForm(form:object){
+
+}
 </script>
 <template>
     <div id="control">
@@ -250,8 +263,8 @@ const form=reactive({
                         <el-form-item prop="Adress">
                             <el-select
                             v-model="form.adress"
-                            multiple
                             filterable
+                            clearable
                             remote
                             reserve-keyword
                             placeholder="Please enter a keyword"
@@ -289,6 +302,64 @@ const form=reactive({
                                 placeholder="Please input"
                                 clearable
                             />
+                            </el-form-item>
+                        </div>
+                    </div>
+                    <div class="line">
+                        <div class="col">
+                            <p>仓位</p>
+                            <el-form-item prop="Storage">
+                                <el-select
+                                v-model="form.storage"
+                                clearable
+                                placeholder="Select"
+                                style="width: 250px;"
+                                >
+                                <el-option
+                                v-for="item in option6"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
+                                />
+                                </el-select>
+                            </el-form-item>
+                        </div>
+                        <div class="col">
+                            <p>变动时间</p>
+                            <el-form-item prop="Time_change">
+                                <el-date-picker
+                                    v-model="form.time_change"
+                                    type="date"
+                                    placeholder="Pick a day"
+                                    size="default"
+                                    style="width: 150px;"
+                                />
+                            </el-form-item>
+                        </div>
+                    </div>
+                    <div class="line">
+                        <div class="col">
+                            <p>备注：</p>
+                            <el-input
+                            v-model="form.text"
+                            style="width: 300px"
+                            :rows="4"
+                            type="textarea"
+                            placeholder="Please input"
+                            />
+                        </div>
+                        <div class="col">
+                            <p>操作员</p>
+                            <el-form-item prop="person">
+                                <el-input
+                                v-model="form.person"
+                                style="width: 200px"
+                                placeholder="Please input"
+                                clearable
+                            />
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" @click="submitForm(form)" class="blink">执行操作{{  }}</el-button>
                             </el-form-item>
                         </div>
                     </div>
@@ -451,4 +522,30 @@ const form=reactive({
     font-size: 14px;
     cursor:default;
 }
+.blink{
+        width: 50%;
+        margin: auto;
+        position: relative;
+        border-radius: 30px;
+        outline-style: none ;
+        border: 1px solid #ccc; 
+        background-image:linear-gradient(90deg,v-bind(linnear));
+        background-size: 400%;
+        padding: 3%;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        color: white;
+    }
+    .blink:hover{
+        animation: animate 8s linear infinite;
+    }
+    @keyframes animate{
+        from {
+            background-position: 0%;
+        }
+        to{
+            background-position: 400%;
+        }
+    } 
 </style>
