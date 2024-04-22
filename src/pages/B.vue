@@ -94,7 +94,7 @@ let option6=[
         label:"SD-CJSNDK676"
     }
 ]
-let valiempty=(rule:object,value:string,callback:any)=>{
+let valiInputEmpty=(rule:object,value:string,callback:any)=>{
     if(value==="")
     {
         console.log(11111)
@@ -104,8 +104,28 @@ let valiempty=(rule:object,value:string,callback:any)=>{
         callback()
     }
 }
+let valiTimeEmpty=(rule:object,value:string,callback:any)=>{
+    if(value==="")
+    {
+        console.log(11111)
+        callback(new Error("请选择日期"));
+    }
+    else{
+        callback()
+    }
+}
+let valiSelectEmpty=(rule:object,value:string,callback:any)=>{
+    if(value==="")
+    {
+        console.log(11111)
+        callback(new Error("请选择内容"));
+    }
+    else{
+        callback()
+    }
+}
 let valimust=(rule:object,value:string,callback:any)=>{
-    if(value==="" && ruleForm.amount==="增加")
+    if(value==="" && ruleForm.Amount!=="减少")
     {
         callback(new Error("请输入内容"));
     }
@@ -113,20 +133,20 @@ let valimust=(rule:object,value:string,callback:any)=>{
         callback()
     }
 }
-let rules={
-Name:[{validator:valiempty,trigger:'blur'}],
-Amount:[{validator:valiempty,trigger:'blur'}],
-Kind:[{validator:valiempty,trigger:'blur'}],
-Time:[{validator:valiempty,trigger:'blur'}],
-Time_keep:[{validator:valiempty,trigger:'blur'}],
-Adress:[{validator:valiempty,trigger:'blur'}],
-Price:[{validator:valiempty,trigger:'blur'}],
-Prices:[{validator:valiempty,trigger:'blur'}],
-Storage:[{validator:valiempty,trigger:'blur'}],
-Time_change:[{validator:valiempty,trigger:'blur'}],
-Operator:[{validator:valiempty,trigger:'blur'}],
-Content:[{validator:valiempty,trigger:'blur'}]
-}
+const rules=reactive({
+// Name:[{validator:valiempty,trigger:'blur'}],
+// Amount:[{validator:valiempty,trigger:'blur'}],
+// Kind:[{validator:valiempty,trigger:'blur'}],
+Time:[{validator:valimust,trigger:'blur'}],
+// Time_keep:[{validator:valiTimeEmpty,trigger:'blur'}],
+// Adress:[{validator:valiInputEmpty,trigger:'blur'}],
+Price:[{validator:valimust,trigger:'blur'}],
+Prices:[{validator:valimust,trigger:'blur'}],
+// Storage:[{validator:valiSelectEmpty,trigger:'blur'}],
+Time_change:[{validator:valiTimeEmpty,trigger:'blur'}],
+Operator:[{validator:valiInputEmpty,trigger:'blur'}],
+Content:[{validator:valiInputEmpty,trigger:'blur'}]
+})
 const list = ref<ListItem[]>([])
 const option5 = ref<ListItem[]>([])
 const value = ref<string[]>([])
@@ -157,19 +177,19 @@ const remoteMethod = (query: string) => {
   }
 }
 //只能用const否则页面会报错，不知道为啥
-let ruleForm=reactive({
-    name:"",
-    amount:"",
-    kind:"",
-    time:"",
-    time_keep:"",
-    adress:"",
-    price:"",
-    prices:"",
-    storage:"",
-    time_change:"",
-    person:"",
-    text:""
+const ruleForm=reactive({
+    Name:"",
+    Amount:"",
+    Kind:"",
+    Time:"",
+    Time_keep:"",
+    Adress:"",
+    Price:"",
+    Prices:"",
+    Storage:"",
+    Time_change:"",
+    Operator:"",
+    Content:""
 })
 function submitForm(form:object){
     console.log(form)
@@ -202,13 +222,12 @@ function submitForm(form:object){
                         </form>
                     </div>
                 </div>
-                <el-form id="work" :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-ruleForm">
+                <el-form id="work" :model="ruleForm" class="demo-ruleForm" :rules="rules">
                     <div class="col">
                         <p>物料名称</p>
                         <el-form-item prop="Name">
                             <el-select
-                            v-model="ruleForm.name"
-                            clearable
+                            v-model="ruleForm.Name"
                             placeholder="Select"
                             style="width: 320px;"
                             >
@@ -226,8 +245,7 @@ function submitForm(form:object){
                             <p>变化数量</p>
                             <el-form-item prop="Amount">
                                 <el-select
-                                v-model="ruleForm.amount"
-                                clearable
+                                v-model="ruleForm.Amount"
                                 placeholder="Select"
                                 style="width: 150px;"
                                 >
@@ -244,8 +262,7 @@ function submitForm(form:object){
                             <p>变动类型</p>
                             <el-form-item prop="Kind">
                                 <el-select
-                                v-model="ruleForm.kind"
-                                clearable
+                                v-model="ruleForm.Kind"
                                 placeholder="Select"
                                 style="width: 155px;"
                                 >
@@ -264,7 +281,7 @@ function submitForm(form:object){
                             <p>生产日期</p>
                             <el-form-item prop="Time">
                                 <el-date-picker
-                                    v-model="ruleForm.time"
+                                    v-model="ruleForm.Time"
                                     type="date"
                                     placeholder="Pick a day"
                                     size="default"
@@ -276,8 +293,7 @@ function submitForm(form:object){
                             <p>保质期</p>
                             <el-form-item prop="Time_keep">
                                 <el-select
-                                v-model="ruleForm.time_keep"
-                                clearable
+                                v-model="ruleForm.Time_keep"
                                 placeholder="Select"
                                 style="width: 135px;"
                                 >
@@ -295,9 +311,8 @@ function submitForm(form:object){
                         <p>物料来源</p>
                         <el-form-item prop="Adress">
                             <el-select
-                            v-model="ruleForm.adress"
+                            v-model="ruleForm.Adress"
                             filterable
-                            clearable
                             remote
                             reserve-keyword
                             placeholder="Please enter a keyword"
@@ -319,10 +334,9 @@ function submitForm(form:object){
                             <p>单价</p>
                             <el-form-item prop="Price">
                                 <el-input
-                                v-model="ruleForm.price"
+                                v-model="ruleForm.Price"
                                 style="width: 200px"
                                 placeholder="Please input"
-                                clearable
                             />
                             </el-form-item>
                         </div>
@@ -330,10 +344,9 @@ function submitForm(form:object){
                             <p>总价</p>
                             <el-form-item prop="Prices">
                                 <el-input
-                                v-model="ruleForm.prices"
+                                v-model="ruleForm.Prices"
                                 style="width: 200px"
                                 placeholder="Please input"
-                                clearable
                             />
                             </el-form-item>
                         </div>
@@ -343,10 +356,10 @@ function submitForm(form:object){
                             <p>仓位</p>
                             <el-form-item prop="Storage">
                                 <el-select
-                                v-model="ruleForm.storage"
-                                clearable
+                                v-model="ruleForm.Storage"
                                 placeholder="Select"
                                 style="width: 250px;"
+                                clearable
                                 >
                                 <el-option
                                 v-for="item in option6"
@@ -361,7 +374,7 @@ function submitForm(form:object){
                             <p>变动时间</p>
                             <el-form-item prop="Time_change">
                                 <el-date-picker
-                                    v-model="ruleForm.time_change"
+                                    v-model="ruleForm.Time_change"
                                     type="date"
                                     placeholder="Pick a day"
                                     size="default"
@@ -375,7 +388,7 @@ function submitForm(form:object){
                             <p>备注：</p>
                             <el-form-item prop="Content">
                                 <el-input
-                                v-model="ruleForm.text"
+                                v-model="ruleForm.Content"
                                 style="width: 300px"
                                 :rows="4"
                                 type="textarea"
@@ -387,10 +400,9 @@ function submitForm(form:object){
                             <p>操作员</p>
                             <el-form-item prop="Operator">
                                 <el-input
-                                v-model="ruleForm.person"
+                                v-model="ruleForm.Operator"
                                 style="width: 200px"
                                 placeholder="Please input"
-                                clearable
                             />
                             </el-form-item>
                             <el-form-item>
