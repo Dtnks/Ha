@@ -12,18 +12,9 @@
 
         router.push({path:'/home'})
     }
-    let validatePass=(rule:object,value:string,callback:any)=>{
+    let valiempty=(rule:object,value:string,callback:any)=>{
         if (value===''){
-            console.log(value)
-            callback(new Error('请输入账号'));
-        }
-        else{
-            callback()
-        }
-    }
-    let validatePass2=(rule:object,value:string,callback:any)=>{
-        if (value===''){
-            callback(new Error('请输入密码'));
+            callback(new Error('请输入内容'));
         }
         else{
             callback()
@@ -47,10 +38,10 @@
         })
     let rules={
         account: [
-            { validator: validatePass, trigger: 'blur' }
+            { validator: valiempty, trigger: 'blur' }
           ],
           pass: [
-            { validator: validatePass2, trigger: 'blur' }
+            { validator: valiempty, trigger: 'blur' }
           ],
           vali: [
             { validator: checkVali, trigger: 'blur' }

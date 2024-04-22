@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import Header from '../component/header.vue'
-import {reactive, ref,onMounted} from 'vue'
+import {reactive, ref,onMounted, triggerRef} from 'vue'
 defineProps(["linnear"])
 let isactive=ref(false)
 function changeclass(){
@@ -94,6 +94,39 @@ let option6=[
         label:"SD-CJSNDK676"
     }
 ]
+let valiempty=(rule:object,value:string,callback:any)=>{
+    if(value==="")
+    {
+        console.log(11111)
+        callback(new Error("请输入内容"));
+    }
+    else{
+        callback()
+    }
+}
+let valimust=(rule:object,value:string,callback:any)=>{
+    if(value==="" && ruleForm.amount==="增加")
+    {
+        callback(new Error("请输入内容"));
+    }
+    else{
+        callback()
+    }
+}
+let rules={
+Name:[{validator:valiempty,trigger:'blur'}],
+Amount:[{validator:valiempty,trigger:'blur'}],
+Kind:[{validator:valiempty,trigger:'blur'}],
+Time:[{validator:valiempty,trigger:'blur'}],
+Time_keep:[{validator:valiempty,trigger:'blur'}],
+Adress:[{validator:valiempty,trigger:'blur'}],
+Price:[{validator:valiempty,trigger:'blur'}],
+Prices:[{validator:valiempty,trigger:'blur'}],
+Storage:[{validator:valiempty,trigger:'blur'}],
+Time_change:[{validator:valiempty,trigger:'blur'}],
+Operator:[{validator:valiempty,trigger:'blur'}],
+Content:[{validator:valiempty,trigger:'blur'}]
+}
 const list = ref<ListItem[]>([])
 const option5 = ref<ListItem[]>([])
 const value = ref<string[]>([])
@@ -124,7 +157,7 @@ const remoteMethod = (query: string) => {
   }
 }
 //只能用const否则页面会报错，不知道为啥
-const form=reactive({
+let ruleForm=reactive({
     name:"",
     amount:"",
     kind:"",
@@ -139,7 +172,7 @@ const form=reactive({
     text:""
 })
 function submitForm(form:object){
-
+    console.log(form)
 }
 </script>
 <template>
@@ -169,12 +202,12 @@ function submitForm(form:object){
                         </form>
                     </div>
                 </div>
-                <el-form id="work" :model="form" label-width="auto" style="max-width: 600px">
+                <el-form id="work" :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-ruleForm">
                     <div class="col">
                         <p>物料名称</p>
                         <el-form-item prop="Name">
                             <el-select
-                            v-model="form.name"
+                            v-model="ruleForm.name"
                             clearable
                             placeholder="Select"
                             style="width: 320px;"
@@ -193,7 +226,7 @@ function submitForm(form:object){
                             <p>变化数量</p>
                             <el-form-item prop="Amount">
                                 <el-select
-                                v-model="form.amount"
+                                v-model="ruleForm.amount"
                                 clearable
                                 placeholder="Select"
                                 style="width: 150px;"
@@ -211,7 +244,7 @@ function submitForm(form:object){
                             <p>变动类型</p>
                             <el-form-item prop="Kind">
                                 <el-select
-                                v-model="form.kind"
+                                v-model="ruleForm.kind"
                                 clearable
                                 placeholder="Select"
                                 style="width: 155px;"
@@ -231,7 +264,7 @@ function submitForm(form:object){
                             <p>生产日期</p>
                             <el-form-item prop="Time">
                                 <el-date-picker
-                                    v-model="form.time"
+                                    v-model="ruleForm.time"
                                     type="date"
                                     placeholder="Pick a day"
                                     size="default"
@@ -243,7 +276,7 @@ function submitForm(form:object){
                             <p>保质期</p>
                             <el-form-item prop="Time_keep">
                                 <el-select
-                                v-model="form.time_keep"
+                                v-model="ruleForm.time_keep"
                                 clearable
                                 placeholder="Select"
                                 style="width: 135px;"
@@ -262,7 +295,7 @@ function submitForm(form:object){
                         <p>物料来源</p>
                         <el-form-item prop="Adress">
                             <el-select
-                            v-model="form.adress"
+                            v-model="ruleForm.adress"
                             filterable
                             clearable
                             remote
@@ -284,9 +317,9 @@ function submitForm(form:object){
                     <div class="line">
                         <div class="col">
                             <p>单价</p>
-                            <el-form-item prop="price">
+                            <el-form-item prop="Price">
                                 <el-input
-                                v-model="form.price"
+                                v-model="ruleForm.price"
                                 style="width: 200px"
                                 placeholder="Please input"
                                 clearable
@@ -295,9 +328,9 @@ function submitForm(form:object){
                         </div>
                         <div class="col">
                             <p>总价</p>
-                            <el-form-item prop="prices">
+                            <el-form-item prop="Prices">
                                 <el-input
-                                v-model="form.prices"
+                                v-model="ruleForm.prices"
                                 style="width: 200px"
                                 placeholder="Please input"
                                 clearable
@@ -310,7 +343,7 @@ function submitForm(form:object){
                             <p>仓位</p>
                             <el-form-item prop="Storage">
                                 <el-select
-                                v-model="form.storage"
+                                v-model="ruleForm.storage"
                                 clearable
                                 placeholder="Select"
                                 style="width: 250px;"
@@ -328,7 +361,7 @@ function submitForm(form:object){
                             <p>变动时间</p>
                             <el-form-item prop="Time_change">
                                 <el-date-picker
-                                    v-model="form.time_change"
+                                    v-model="ruleForm.time_change"
                                     type="date"
                                     placeholder="Pick a day"
                                     size="default"
@@ -340,26 +373,28 @@ function submitForm(form:object){
                     <div class="line">
                         <div class="col">
                             <p>备注：</p>
-                            <el-input
-                            v-model="form.text"
-                            style="width: 300px"
-                            :rows="4"
-                            type="textarea"
-                            placeholder="Please input"
-                            />
+                            <el-form-item prop="Content">
+                                <el-input
+                                v-model="ruleForm.text"
+                                style="width: 300px"
+                                :rows="4"
+                                type="textarea"
+                                placeholder="Please input"
+                                />
+                            </el-form-item>
                         </div>
                         <div class="col">
                             <p>操作员</p>
-                            <el-form-item prop="person">
+                            <el-form-item prop="Operator">
                                 <el-input
-                                v-model="form.person"
+                                v-model="ruleForm.person"
                                 style="width: 200px"
                                 placeholder="Please input"
                                 clearable
                             />
                             </el-form-item>
                             <el-form-item>
-                                <el-button type="primary" @click="submitForm(form)" class="blink">执行操作{{  }}</el-button>
+                                <el-button type="primary" @click="submitForm(ruleForm)" class="blink">执行操作{{  }}</el-button>
                             </el-form-item>
                         </div>
                     </div>
