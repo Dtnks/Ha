@@ -40,10 +40,25 @@ template{
     padding: 15px;
     color:black;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-
     text-decoration: none;
 }
+@keyframes order {
+    0%{
+        scale: 1;
+        background-color: rgba(255, 255, 255, 0.5);
+        color:black;
+    }
+    50%{
+        scale: 1.1;
+    }
+    100%{
+        scale:1;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+    }
+}
 .nav a.active{
+    animation: order 0.5s ease-in-out ;
     background-color: rgba(0, 0, 0, 0.5);
     color: white;
 }

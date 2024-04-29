@@ -116,6 +116,7 @@
     }
     localStorage.setItem("background",JSON.stringify(background))
     //防止按钮滑动不连畅，缺点是没法快速连点
+
     setTimeout(()=>changetheme(),400)
   }
   //是否自动切换背景

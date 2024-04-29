@@ -230,6 +230,7 @@ function submitForm(form:object){
                             v-model="ruleForm.Name"
                             placeholder="Select"
                             style="width: 320px;"
+                            clearable
                             >
                             <el-option
                             v-for="item in option1"
@@ -248,6 +249,7 @@ function submitForm(form:object){
                                 v-model="ruleForm.Amount"
                                 placeholder="Select"
                                 style="width: 150px;"
+                                clearable
                                 >
                                 <el-option
                                 v-for="item in option2"
@@ -265,6 +267,7 @@ function submitForm(form:object){
                                 v-model="ruleForm.Kind"
                                 placeholder="Select"
                                 style="width: 155px;"
+                                clearable
                                 >
                                 <el-option
                                 v-for="item in option3"
@@ -296,6 +299,7 @@ function submitForm(form:object){
                                 v-model="ruleForm.Time_keep"
                                 placeholder="Select"
                                 style="width: 135px;"
+                                clearable
                                 >
                                 <el-option
                                 v-for="item in option4"
@@ -319,6 +323,7 @@ function submitForm(form:object){
                             :remote-method="remoteMethod"
                             :loading="loading"
                             style="width: 415px"
+                            clearable
                         >
                             <el-option
                             v-for="item in option5"
@@ -337,6 +342,7 @@ function submitForm(form:object){
                                 v-model="ruleForm.Price"
                                 style="width: 200px"
                                 placeholder="Please input"
+                                clearable
                             />
                             </el-form-item>
                         </div>
@@ -347,6 +353,7 @@ function submitForm(form:object){
                                 v-model="ruleForm.Prices"
                                 style="width: 200px"
                                 placeholder="Please input"
+                                clearable
                             />
                             </el-form-item>
                         </div>
@@ -393,6 +400,7 @@ function submitForm(form:object){
                                 :rows="4"
                                 type="textarea"
                                 placeholder="Please input"
+                                clearable
                                 />
                             </el-form-item>
                         </div>
@@ -403,6 +411,7 @@ function submitForm(form:object){
                                 v-model="ruleForm.Operator"
                                 style="width: 200px"
                                 placeholder="Please input"
+                                clearable
                             />
                             </el-form-item>
                             <el-form-item>
