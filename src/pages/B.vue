@@ -1,6 +1,8 @@
 <script lang="ts" setup>
+import type { FormInstance } from 'element-plus';
 import Header from '../component/header.vue'
 import {reactive, ref,onMounted, triggerRef} from 'vue'
+const ruleFormRef = ref<FormInstance>()
 defineProps(["linnear"])
 let isactive=ref(false)
 function changeclass(){
@@ -97,7 +99,6 @@ let option6=[
 let valiInputEmpty=(rule:object,value:string,callback:any)=>{
     if(value==="")
     {
-        console.log(11111)
         callback(new Error("请输入内容"));
     }
     else{
@@ -107,7 +108,6 @@ let valiInputEmpty=(rule:object,value:string,callback:any)=>{
 let valiTimeEmpty=(rule:object,value:string,callback:any)=>{
     if(value==="")
     {
-        console.log(11111)
         callback(new Error("请选择日期"));
     }
     else{
@@ -117,7 +117,6 @@ let valiTimeEmpty=(rule:object,value:string,callback:any)=>{
 let valiSelectEmpty=(rule:object,value:string,callback:any)=>{
     if(value==="")
     {
-        console.log(11111)
         callback(new Error("请选择内容"));
     }
     else{
@@ -134,15 +133,15 @@ let valimust=(rule:object,value:string,callback:any)=>{
     }
 }
 const rules=reactive({
-// Name:[{validator:valiempty,trigger:'blur'}],
-// Amount:[{validator:valiempty,trigger:'blur'}],
-// Kind:[{validator:valiempty,trigger:'blur'}],
+Name:[{validator:valiSelectEmpty,trigger:'blur'}],
+Amount:[{validator:valiSelectEmpty,trigger:'blur'}],
+Kind:[{validator:valiSelectEmpty,trigger:'blur'}],
 Time:[{validator:valimust,trigger:'blur'}],
-// Time_keep:[{validator:valiTimeEmpty,trigger:'blur'}],
-// Adress:[{validator:valiInputEmpty,trigger:'blur'}],
+Time_keep:[{validator:valiSelectEmpty,trigger:'blur'}],
+Adress:[{validator:valiSelectEmpty,trigger:'blur'}],
 Price:[{validator:valimust,trigger:'blur'}],
 Prices:[{validator:valimust,trigger:'blur'}],
-// Storage:[{validator:valiSelectEmpty,trigger:'blur'}],
+Storage:[{validator:valiSelectEmpty,trigger:'blur'}],
 Time_change:[{validator:valiTimeEmpty,trigger:'blur'}],
 Operator:[{validator:valiInputEmpty,trigger:'blur'}],
 Content:[{validator:valiInputEmpty,trigger:'blur'}]
@@ -191,8 +190,17 @@ const ruleForm=reactive({
     Operator:"",
     Content:""
 })
-function submitForm(form:object){
-    console.log(form)
+const submitForm = (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  formEl.validate((valid) => {
+    if (valid) {
+        console.log(ruleForm)
+      console.log('submit!')
+    } else {
+      console.log('error submit!')
+      return false
+    }
+  })
 }
 </script>
 <template>
@@ -222,7 +230,7 @@ function submitForm(form:object){
                         </form>
                     </div>
                 </div>
-                <el-form id="work" :model="ruleForm" class="demo-ruleForm" :rules="rules">
+                <el-form id="work" :model="ruleForm" class="demo-ruleForm" :rules="rules" ref="ruleFormRef">
                     <div class="col">
                         <p>物料名称</p>
                         <el-form-item prop="Name">
@@ -415,7 +423,7 @@ function submitForm(form:object){
                             />
                             </el-form-item>
                             <el-form-item>
-                                <el-button type="primary" @click="submitForm(ruleForm)" class="blink">执行操作{{  }}</el-button>
+                                <el-button type="primary" @click="submitForm(ruleFormRef)" class="blink">执行操作{{  }}</el-button>
                             </el-form-item>
                         </div>
                     </div>
