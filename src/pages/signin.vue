@@ -1,7 +1,8 @@
 <script lang="ts" setup>
     import router from '@/router';
-    import {reactive} from 'vue'
-    import {} from 'vue-router'
+    import {reactive,ref} from 'vue'
+    import{type FormInstance } from 'element-plus';
+    const ruleFormRef=ref<FormInstance>()
     defineProps(["linnear","back"])
     let ruleForm=reactive({
           account: '',
@@ -9,12 +10,22 @@
           vali: '',
           checkPass:''
         })
-    let user=reactive({Username:'',Email:'',Password:''})
-    function submitForm(Formname:string){
-        console.log(Formname)
-        alert("注册成功")
-        router.push({path:'/login'})
-    }
+    const submitForm = (formEl: FormInstance | undefined) => {
+        if (!formEl) return
+        formEl.validate((valid) => {
+            if (valid) {
+                ElMessage({
+                message: '注册成功',
+                grouping: true,
+                type: 'success',
+            })
+                router.push({path:'/login'})
+            } else {
+            console.log('error submit!')
+            return false
+            }
+        })
+        }
     let valiempty=(rule:object,value:string,callback:any)=>{
         if (value===''){
            callback(new Error('请输入内容'));
@@ -42,7 +53,7 @@
             callback();
         }
     }
-    let rules={
+    let rules=reactive({
         account: [
             { validator: valiempty, trigger: 'blur' }
           ],
@@ -55,7 +66,7 @@
           vali: [
             { validator: checkVali, trigger: 'blur' }
           ]
-    }
+    })
     function getvali(){
 
     }
@@ -68,7 +79,7 @@
         </div>
         <div class="right">
             <h2>注册账号</h2>
-            <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleform" class="demo-ruleForm" style="margin: auto;">
+            <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleFormRef" class="demo-ruleForm" style="margin: auto;">
                 <el-form-item label="账号" prop="account">
                     <el-input v-model="ruleForm.account" autocomplete="on"></el-input>
                 </el-form-item>
@@ -80,13 +91,13 @@
                 </el-form-item>
                 <el-form-item label="验证码" prop="vali">
                     <div class="line">
-                        <el-input v-model.number="ruleForm.vali" ></el-input>
+                        <el-input v-model.number="ruleForm.vali"  autocomplete="off"></el-input>
                         <div class="vali" @click="getvali()">获取验证码</div>
                     </div>
                 </el-form-item>
                 <div></div>
                 <el-form-item>
-                    <el-button type="primary" @click="submitForm('ruleForm')" class="blink">注册</el-button>
+                    <el-button type="primary" @click="submitForm(ruleFormRef)" class="blink">注册</el-button>
                 </el-form-item>
             </el-form>
         </div>

@@ -2,16 +2,31 @@
     defineProps(["linnear"])
     import router from '@/router'
     import {reactive,onMounted,ref} from 'vue'
+    import { UserStore } from '@/stores/user';
+    import type{ FormInstance } from 'element-plus';
+    const ruleFormRef=ref<FormInstance>()
+    const store=UserStore()
+    store.token="1"
+    localStorage.setItem('token',store.token as string)
     let code=ref<string|null>(localStorage.getItem('code'))
   // 设置本地存储，避免因为刷新而更换背景
     let co=ref("rgb("+Math.random()*255+","+Math.random()*255+","+Math.random()*255+")")
     let random=new Array<number|string>(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
                     'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z');
     localStorage.setItem('code',code.value as string)
-    function submitForm(Formname:object){
-
-        router.push({path:'/home'})
-    }
+    const submitForm = (formEl: FormInstance | undefined) => {
+        if (!formEl) return
+        formEl.validate((valid) => {
+            if (valid) {
+                store.token="2"
+                router.push({path:'/home'})
+            } else {
+            console.log('error submit!')
+            return false
+            }
+        })
+        }
+        
     let valiempty=(rule:object,value:string,callback:any)=>{
         if (value===''){
             callback(new Error('请输入内容'));
@@ -121,7 +136,7 @@
     <div id="log">
         <div class="left">
             <h2>欢迎登录</h2>
-            <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleform" class="demo-ruleForm" style="margin: auto;" label-width="auto" label-position="right">
+            <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleFormRef" class="demo-ruleForm" style="margin: auto;" label-width="auto" label-position="right">
                 <el-form-item label="账号" prop="account">
                     <el-input type="text" v-model="ruleForm.account" autocomplete="on"></el-input>
                 </el-form-item>
@@ -130,12 +145,12 @@
                 </el-form-item>
                 <el-form-item label="验证码" prop="vali">
                     <div class="line">
-                        <el-input v-model.number="ruleForm.vali" ></el-input>
+                        <el-input v-model="ruleForm.vali" autocomplete="off"></el-input>
                         <canvas class="valitext" @click="draw()" ref="convas"></canvas>
                     </div>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="submitForm(ruleForm)" class="blink">登录</el-button>
+                    <el-button type="primary" @click="submitForm(ruleFormRef)" class="blink" autocomplete="off">登录</el-button>
                 </el-form-item>
             </el-form>
         </div>

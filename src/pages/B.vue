@@ -464,7 +464,6 @@ const submitForm = (formEl: FormInstance | undefined) => {
 }
 #list{
     flex: 1.2;
-    border: 2px solid rgba(128,128,128,0.5);
     display:flex;
     flex-direction: column;
 }

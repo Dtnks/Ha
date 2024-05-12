@@ -8,7 +8,12 @@ import E from "@/pages/E.vue"
 import F from "@/pages/F.vue"
 import Login from '@/pages/login.vue'
 import Signin from '@/pages/signin.vue'
-
+import {UserStore} from "@/stores/user"
+import pinia from "@/stores/user"
+const store=UserStore(pinia)
+if (localStorage.getItem('token')!==null){
+  store.token=localStorage.getItem("token") as string
+}
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -69,5 +74,27 @@ const router = createRouter({
     },
   ]
 })
-
+router.beforeEach(async(to,from,next)=>{
+  if(store.token==="0"){
+    next()
+  }
+  else if(store.token === "1"){
+    if(to.name==="signin")
+    {
+      next()
+    }
+    else if(to.name==="login")
+    {
+      next()
+      
+    }
+    else{
+      next({name:"login"})
+    }
+    
+  }
+  else{
+    next()
+  }
+})
 export default router
