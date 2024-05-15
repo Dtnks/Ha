@@ -1,135 +1,127 @@
 <script lang="ts" setup>
-    defineProps(["linnear"])
-    import router from '@/router'
-    import {reactive,onMounted,ref} from 'vue'
-    import { UserStore } from '@/stores/user';
-    import type{ FormInstance } from 'element-plus';
-    const ruleFormRef=ref<FormInstance>()
-    const store=UserStore()
-    store.token="1"
-    localStorage.setItem('token',store.token as string)
-    let code=ref<string|null>(localStorage.getItem('code'))
-  // 设置本地存储，避免因为刷新而更换背景
-    let co=ref("rgb("+Math.random()*255+","+Math.random()*255+","+Math.random()*255+")")
-    let random=new Array<number|string>(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
-                    'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z');
-    localStorage.setItem('code',code.value as string)
-    const submitForm = (formEl: FormInstance | undefined) => {
-        if (!formEl) return
-        formEl.validate((valid) => {
-            if (valid) {
-                store.token="2"
-                router.push({path:'/home'})
-            } else {
-            console.log('error submit!')
-            return false
-            }
-        })
-        }
-        
-    let valiempty=(rule:object,value:string,callback:any)=>{
-        if (value===''){
-            callback(new Error('请输入内容'));
-        }
-        else{
-            callback()
-        }
-    }
-    let checkVali=(rule:object,value:string,callback:any)=>{
-        if (!value) {
-          return callback(new Error('验证码不能为空'));
-        }
-        else if(code.value!=ruleForm.vali){
-            callback(new Error("验证码错误"))
-        }
-        else{
-            callback()
-        }
-    }
-    let ruleForm=reactive({
-          account: '',
-          pass: '',
-          vali: ''
-        })
-    let rules={
-        account: [
-            { validator: valiempty, trigger: 'blur' }
-          ],
-          pass: [
-            { validator: valiempty, trigger: 'blur' }
-          ],
-          vali: [
-            { validator: checkVali, trigger: 'blur' }
-          ]
-    }
-    function changeCode(){
-        code.value=''
-        co.value="rgb("+Math.random()*255+","+Math.random()*255+","+Math.random()*255+")"
-        let codelis=''
-        for (let i=0;i<4;i++){
-            codelis=codelis+random[Math.floor(Math.random()*62)]
-        }
-        code.value=codelis
-    }
-    function draw() {
-      let canvas_width =  (document.querySelector(".valitext") as HTMLCanvasElement).clientWidth;
-      let canvas_height = (document.querySelector(".valitext") as HTMLCanvasElement).clientHeight;
-      let canvas = document.getElementsByClassName("valitext")[0] as HTMLCanvasElement; //获取到canvas
-      let context = canvas.getContext("2d") as CanvasRenderingContext2D; //获取到canvas画图
-      canvas.width = canvas_width;
-      canvas.height = canvas_height;
-      
-      var aLength = 4; //获取到数组的长度
-      changeCode()
-      //4个验证码数
-      for (var i = 0; i <= 3; i++) {
-        var deg = (Math.random() * 30 * Math.PI) / 180; //产生0~30之间的随机弧度
-        var txt = (code.value as string)[i]; //得到随机的一个内容
-        // show_num[i] = txt.toLowerCase();// 依次把取得的内容放到数组里面
-        var x = 10 + i * 20; //文字在canvas上的x坐标
-        var y = 20 + Math.random() * 8; //文字在canvas上的y坐标
-        context.font = "bold 23px 微软雅黑";
+defineProps(["linear"])
+import router from '@/router'
+import {reactive,onMounted,ref} from 'vue'
+import {GetLoginInfo} from '@/api/request'
+let code=ref<string|null>(localStorage.getItem('code'))
+let co=ref("rgb("+Math.random()*255+","+Math.random()*255+","+Math.random()*255+")")
+let random=new Array<number|string>(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
+    'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z');
+localStorage.setItem('code',code.value as string)
+let validEmpty=(rule:object, value:string, callback:any)=>{
+  if (value===''){
+    callback(new Error('请输入内容'));
+  }
+  else{
+    callback()
+  }
+}
+function submitForm(){
+  GetLoginInfo({
+    password:ruleForm.pass,
+    username:ruleForm.account
+  })
+  router.push('/home')
+}
+let checkValid=(rule:object, value:string, callback:any)=>{
+  if (!value) {
+    return callback(new Error('验证码不能为空'));
+  }
+  else if(code.value!=ruleForm.valid){
+    callback(new Error("验证码错误"))
+  }
+  else{
+    callback()
+  }
+}
+let ruleForm=reactive({
+  account: '',
+  pass: '',
+  valid: ''
+})
+let rules={
+  account: [
+    { validator: validEmpty, trigger: 'blur' }
+  ],
+  pass: [
+    { validator: validEmpty, trigger: 'blur' }
+  ],
+  valid: [
+    { validator: checkValid, trigger: 'blur' }
+  ]
+}
+function changeCode(){
+  code.value=''
+  co.value="rgb("+Math.random()*255+","+Math.random()*255+","+Math.random()*255+")"
+  let codeList=''
+  for (let i=0;i<4;i++){
+    codeList=codeList+random[Math.floor(Math.random()*62)]
+  }
+  code.value=codeList
+}
+function draw() {
+  //文字在canvas上的x坐标
+  let y;
+  let x;
+  let i;
+  let canvas_width =  (document.querySelector(".validText") as HTMLCanvasElement).clientWidth;
+  let canvas_height = (document.querySelector(".validText") as HTMLCanvasElement).clientHeight;
+  let canvas = document.getElementsByClassName("validText")[0] as HTMLCanvasElement; //获取到canvas
+  let context = canvas.getContext("2d") as CanvasRenderingContext2D; //获取到canvas画图
+  canvas.width = canvas_width;
+  canvas.height = canvas_height;
 
-        context.translate(x, y);
-        context.rotate(deg);
+  //获取到数组的长度
+  changeCode()
+  //4个验证码数
+  for (i = 0; i <= 3; i++) {
+    let deg = (Math.random() * 30 * Math.PI) / 180; //产生0~30之间的随机弧度
+    let txt = (code.value as string)[i]; //得到随机的一个内容
+    // show_num[i] = txt.toLowerCase();// 依次把取得的内容放到数组里面
+    x = 10 + i * 20;
+    y = 20 + Math.random() * 8; //文字在canvas上的y坐标
+    context.font = "bold 23px 微软雅黑";
 
-        context.fillStyle = co.value;
-        context.fillText(txt, 0, 0);
+    context.translate(x, y);
+    context.rotate(deg);
 
-        context.rotate(-deg);
-        context.translate(-x, -y);
-      }
-      //验证码上显示6条线条
-      for (var i = 0; i <= 5; i++) {
-        context.strokeStyle = co.value;
-        context.beginPath();
-        context.moveTo(
-          Math.random() * canvas_width,
-          Math.random() * canvas_height
-        );
-        context.lineTo(
-          Math.random() * canvas_width,
-          Math.random() * canvas_height
-        );
-        context.stroke();
-      }
-      //验证码上显示41个小点
-      for (var i = 0; i <= 40; i++) {
-        context.strokeStyle = co.value;
-        context.beginPath();
-        var x = Math.random() * canvas_width;
-        var y = Math.random() * canvas_height;
-        context.moveTo(x, y);
-        context.lineTo(x + 1, y + 1);
-        context.stroke();
-      }
-    }
-    if (code.value==="[object Object]"){
-        draw()
-    }
-    onMounted(()=>{
-        if (document.querySelector(".valitext")!==null)
-            draw()})
+    context.fillStyle = co.value;
+    context.fillText(txt, 0, 0);
+
+    context.rotate(-deg);
+    context.translate(-x, -y);
+  }
+  //验证码上显示6条线条
+  for (i = 0; i <= 5; i++) {
+    context.strokeStyle = co.value;
+    context.beginPath();
+    context.moveTo(
+        Math.random() * canvas_width,
+        Math.random() * canvas_height
+    );
+    context.lineTo(
+        Math.random() * canvas_width,
+        Math.random() * canvas_height
+    );
+    context.stroke();
+  }
+  //验证码上显示41个小点
+  for (i = 0; i <= 40; i++) {
+    context.strokeStyle = co.value;
+    context.beginPath();
+    x = Math.random() * canvas_width;
+    y = Math.random() * canvas_height;
+    context.moveTo(x, y);
+    context.lineTo(x + 1, y + 1);
+    context.stroke();
+  }
+}
+if (code.value==="[object Object]"){
+  draw()
+}
+onMounted(()=>{
+  if (document.querySelector(".validText"))
+    draw()})
 </script>
 
 <template>
@@ -143,14 +135,14 @@
                 <el-form-item label="密码" prop="pass">
                     <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="验证码" prop="vali">
+                <el-form-item label="验证码" prop="valid">
                     <div class="line">
-                        <el-input v-model="ruleForm.vali" autocomplete="off"></el-input>
-                        <canvas class="valitext" @click="draw()" ref="convas"></canvas>
+                        <el-input v-model="ruleForm.valid" autocomplete="off"></el-input>
+                        <canvas class="validText" @click="draw()" ref="canvas"></canvas>
                     </div>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="submitForm(ruleFormRef)" class="blink" autocomplete="off">登录</el-button>
+                    <el-button type="primary" @click="submitForm()" class="blink" autocomplete="off">登录</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -169,7 +161,7 @@
         flex-direction: row;
         width: 40%;
         height: 50%;
-        font-family: "Microsoft soft";
+        font-family: "Microsoft soft",serif;
     }
     .left h2{
         margin-top: 30px;
@@ -192,7 +184,7 @@
         width: 70%;
         margin: auto;
         outline-style: none ;
-        border: 1px solid #ccc; 
+        border: 1px solid #ccc;
         border-radius: 8px;
         padding: 3%;
         font-size: 14px;
@@ -204,8 +196,8 @@
         position: relative;
         border-radius: 30px;
         outline-style: none ;
-        border: 1px solid #ccc; 
-        background-image:linear-gradient(90deg,v-bind(linnear));
+        border: 1px solid #ccc;
+        background-image:linear-gradient(90deg,v-bind(linear));
         background-size: 400%;
         padding: 3%;
         font-size: 14px;
@@ -218,15 +210,11 @@
     }
     @keyframes animate{
         from {
-            background-position: 0%;
+            background-position: 0;
         }
         to{
             background-position: 400%;
         }
-    } 
-    #forget{
-        cursor: pointer;
-        font-size: 14px;
     }
     .right a{
         width: 70%;
@@ -234,10 +222,10 @@
         color: white;
         font-weight: bold;
     }
-    .valitext{
+    .validText{
         min-width: 100px;
         height: 30px;
-        font-family: Arial;
+        font-family: Arial,serif;
         font-style: italic;
         font-weight: bold;
         border: 0;
