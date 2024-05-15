@@ -1,77 +1,52 @@
 <script lang="ts" setup>
-import type{ FormInstance } from 'element-plus';
+import type{ FormInstance, RowInstance } from 'element-plus';
 import Header from '../component/header.vue'
 import {ref,reactive} from 'vue'
-defineProps(["linnear"])
-// 获取当前时间
-const today = new Date();
-// 获取当前时间(today)的年份
-const year = today.getFullYear();
-// 获取月份
-const month = String(today.getMonth() + 1).padStart(2, '0');
-// 获取当前日
-const day = String(today.getDate()).padStart(2, '0');
-// 得到年月日
-const thisDayDate = `${year}-${month}-${day}`;
-const estimatedDeliveryTime=ref("")
-const FormRef=ref<FormInstance>()
-let Form=ref({
-    addressBookId: undefined,
-    amount: undefined,
-    deliveryStatus: undefined,
-    estimatedDeliveryTime: thisDayDate+" "+estimatedDeliveryTime,
-    packAmount: undefined,
-    payMethod: undefined,
-    remark: "",
-    tablewareNumber: undefined,
-    tablewareStatus: 0
+import axios from 'axios'
+import {GetOrder,GetOrderDetail} from '@/api/request'
+let record=ref([])
+const centerDialogVisible=ref(false)
+function timestampToTime(timestamp) {
+    timestamp = timestamp ? timestamp : null;
+    let date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+    let Y = date.getFullYear() + '-';
+    let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+    let D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' ';
+    let h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+    let m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+    let s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+    return Y + M + D + h + m + s;
+  }
+GetOrder({page:2,pageSize:20}).then((res:any)=>{
+    record.value=res.data.records
+    record.value.map((item:any)=>{
+        item.estimatedDeliveryTime=timestampToTime(item.estimatedDeliveryTime)
+    })
 })
-let valiInputEmpty=(rule:object,value:string,callback:any)=>{
-    if(typeof(value)==="undefined")
-    {
-        callback(new Error("请输入内容"));
-    }
-    else{
-        callback()
-    }
+interface DetailsRes {
+    amount: number;/*金额 */
+    dishFlavor: string;/*口味 */
+    dishId: number;/*菜品id 和套餐id只存其一，必存其一 */
+    id: number; /*主键id */
+    name: string;/*名称 */
+    number: number; /*数量 */
+    orderId: number;/*订单id */
+    setmealId: number;/*套餐id */
+
 }
-let valiSelectEmpty=(rule:object,value:string,callback:any)=>{
-    if(typeof(value)==="undefined")
-    {
-        callback(new Error("请选择内容"));
-    }
-    else{
-        callback()
-    }
+let detail=ref<DetailsRes>()
+function handleDetail(index:number,id:number){
+    GetOrderDetail(id).then((res:DetailsRes)=>{
+        detail.value=res
+        centerDialogVisible.value=true
+    })
 }
-let valiTime=(rule:object,value:string,callback:any)=>{
-    if(value===thisDayDate+" [object Object]"){
-        callback(new Error("请选择内容"));
-    }
-    else{
-        callback()
-    }
-}
-const rules=reactive({
-    addressBookId: [{validator:valiInputEmpty,trigger:'blur'}],
-    amount:[{validator:valiInputEmpty,trigger:'blur'}],
-    deliveryStatus: [{validator:valiSelectEmpty,trigger:'blur'}],
-    estimatedDeliveryTime: [{validator:valiTime,trigger:'blur'}],
-    packAmount:[{validator:valiInputEmpty,trigger:'blur'}],
-    payMethod: [{validator:valiSelectEmpty,trigger:'blur'}],
-    tablewareNumber:[{validator:valiInputEmpty,trigger:'blur'}],
-})
-const submitForm = (formEl: FormInstance | undefined) => {
-  if (!formEl) return
-  formEl.validate((valid) => {
-    if (valid) {
-      console.log('submit!')
-    } else {
-      console.log('error submit!')
-      return false
-    }
-  })
-}
+function tableRowClassName(rowIndex:number) {
+     if ((rowIndex + 1) % 2 === 0) {
+          return 'oddRow';
+     }
+      return 'evenRow';
+ }
 </script>
 <template>
     <div id="control">
@@ -80,79 +55,44 @@ const submitForm = (formEl: FormInstance | undefined) => {
             <template v-slot:name>{{}}</template>
             <template v-slot:rate>{{  }}</template>
         </Header>
-        <div class="row">
-            <div class="col left">
-                <el-form style="flex-wrap: wrap;" ref="FormRef" :model="Form" class="demo-ruleForm row" :rules="rules" label-position="top">
-                    <el-form-item label="地址ID" prop="addressBookId" >
-                        <el-input v-model="Form.addressBookId"
-                                    clearable
-                                    style="width: 130px"></el-input>
-                    </el-form-item>
-                    <el-form-item label="总金额" prop="amount">
-                        <el-input v-model="Form.amount"
-                                    clearable
-                                    style="width: 130px"></el-input>
-                    </el-form-item>
-                    <el-form-item label="配送状态" prop="deliveryStatus">
-                        <el-select
-                        v-model="Form.deliveryStatus"
-                        style="width: 150px;">
-                            <el-option
-                            v-for="item in [{value:1,label:'立刻就送'},{value:0,label:'选定时间'}]"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="预计送达时间" prop="estimatedDeliveryTime">
-                        <el-time-picker
-                        v-model="estimatedDeliveryTime"
-                        style="width: 200px;"
-                        ></el-time-picker>
-                    </el-form-item>
-                    <el-form-item label="打包费" prop="packAmount">
-                        <el-input v-model="Form.packAmount"
-                                    clearable
-                                    style="width: 150px"></el-input>
-                    </el-form-item>
-                    <el-form-item label="付款方式" prop="payMethod">
-                        <el-select
-                        v-model="Form.payMethod"
-                        style="width: 150px;">
-                            <el-option 
-                            v-for="item in [{value:1,label:'微信'},{value:2,label:'支付宝'}]"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="餐具数量" prop="tablewareNumber">
-                        <el-input v-model="Form.tablewareNumber"
-                                    clearable
-                                    style="width: 150px"></el-input>
-                    </el-form-item>
-                    <el-form-item label="备注">
-                        <el-form-item prop="remark">
-                                <el-input
-                                v-model="Form.remark"
-                                style="width: 600px"
-                                :rows="4"
-                                type="textarea"
-                                placeholder="Please input"
-                                clearable
-                                />
-                            </el-form-item>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" @click="submitForm(FormRef)" class="blink">执行操作{{  }}</el-button>
-                    </el-form-item>
-                </el-form>
-            </div>
-            <div class="col right">
-                
-            </div>
+        <div class="col">
+            <el-table :data="record" max-height="85vh" :row-class-name="tableRowClassName">
+                <el-table-column prop="number" label="订单号" />
+                <el-table-column prop="userName" label="用户名" />
+                <el-table-column prop="orderDishes" label="菜品信息" />    
+                <el-table-column prop="address" label="地址" />
+                <el-table-column prop="estimatedDeliveryTime" label="预计送达"/>
+                <el-table-column prop="tablewareNumber" label="餐具数量" />
+                <el-table-column label="操作">
+                    <template #default="scope">
+                        <el-button size="small" @click="handleDetail(scope.$index, scope.row.id)">
+                        详情
+                        </el-button>
+                        <el-button
+                        size="small"
+                        type="danger"
+                        @click="handleDelete(scope.$index, scope.row)"
+                        >
+                        删除
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
         </div>
     </div>
+    <el-dialog
+    v-model="centerDialogVisible"
+    title="详情"
+    width="500"
+    align-center
+  >
+  <div class="dialog">
+    <span>数量：{{ detail?.number }}</span>
+    <span>金额：{{ detail?.amount }}</span>
+    <span>口味：{{ detail?.dishFlavor }}</span>
+    <span>套餐名称：{{ detail?.setmealId }}</span>
+  </div>
+  </el-dialog>
 </template>
 <style scoped>
 #control{
@@ -164,51 +104,26 @@ const submitForm = (formEl: FormInstance | undefined) => {
     flex-direction: column;
 }
 .col{
-    display: flex;
-    flex-direction: column;
-    width: 50%;
+    flex: 1;
+    margin: 2vh 2vw;
+    border-radius: 10px;
 }
-.row{
+/deep/ .oddRow {
+    color: black;
+    background-color:rgba(255,255,255,0.7);
+}
+/deep/ .evenRow {
+    background-color: rgba(128,128,128, 0.2);
+    color: black;
+}
+.dialog{
     display: flex;
     flex-direction: row;
-    flex: 1;
+    flex-wrap: wrap;
+    
 }
-.right,
-.left{
-    background-color: rgba(255,255,255,0.7);
-    border-radius: 10px;
-    margin: 3vh;
+.dialog span{
+    margin: 3vh 0;
+    width: 50%;
 }
-.el-form{
-    width: 100%;
-    margin: 10vh 0;
-    justify-content: space-around;
-}
-.blink{
-        width: 100%;
-        margin: auto;
-        position: relative;
-        border-radius: 30px;
-        outline-style: none ;
-        border: 1px solid #ccc; 
-        background-image:linear-gradient(90deg,v-bind(linnear));
-        background-size: 400%;
-        font-size: 14px;
-        font-weight: 700;
-        cursor: pointer;
-        color: white;
-    }
-    .blink:hover{
-        animation: animate 8s linear infinite;
-    }
-    @keyframes animate{
-        from {
-            background-position: 0%;
-        }
-        to{
-            background-position: 400%;
-        }
-    } 
-
-
 </style>

@@ -3,6 +3,11 @@ defineProps(["linear"])
 import router from '@/router'
 import {reactive,onMounted,ref} from 'vue'
 import {GetLoginInfo} from '@/api/request'
+import {UserStore} from "@/stores/user"
+import pinia from "@/stores/user"
+import{ ElMessage, type FormInstance } from 'element-plus';
+const ruleFormRef=ref<FormInstance>()
+const store=UserStore(pinia)
 let code=ref<string|null>(localStorage.getItem('code'))
 let co=ref("rgb("+Math.random()*255+","+Math.random()*255+","+Math.random()*255+")")
 let random=new Array<number|string>(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
@@ -16,18 +21,41 @@ let validEmpty=(rule:object, value:string, callback:any)=>{
     callback()
   }
 }
-function submitForm(){
-  GetLoginInfo({
-    password:ruleForm.pass,
-    username:ruleForm.account
-  })
-  router.push('/home')
+const submitForm = (formEl: FormInstance | undefined) => {
+if (!formEl) return
+    formEl.validate((valid)=>{
+        if (valid) {
+            GetLoginInfo({
+            password:ruleForm.pass,
+            username:ruleForm.account
+        }).then(()=>
+        {
+            ElMessage({
+                message:"登陆成功",
+                type:"success",
+                plain:true
+            })
+            store.token="2"
+            localStorage.setItem('token',"2")
+            router.push('/home')
+        }).catch(()=>{
+            ElMessage({
+                message:"账号密码错误",
+                type:"error",
+                plain:true
+            })
+        })
+        } else {
+            console.log('error submit!')
+            return false
+        }
+    })
 }
 let checkValid=(rule:object, value:string, callback:any)=>{
   if (!value) {
     return callback(new Error('验证码不能为空'));
   }
-  else if(code.value!=ruleForm.valid){
+  else if(code.value?.toUpperCase!==ruleForm.valid.toUpperCase){
     callback(new Error("验证码错误"))
   }
   else{
@@ -142,7 +170,7 @@ onMounted(()=>{
                     </div>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="submitForm()" class="blink" autocomplete="off">登录</el-button>
+                    <el-button type="primary" @click="submitForm(ruleFormRef)" class="blink" autocomplete="off">登录</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -196,6 +224,7 @@ onMounted(()=>{
         position: relative;
         border-radius: 30px;
         outline-style: none ;
+        font-family: "Microsoft soft",serif;
         border: 1px solid #ccc;
         background-image:linear-gradient(90deg,v-bind(linear));
         background-size: 400%;

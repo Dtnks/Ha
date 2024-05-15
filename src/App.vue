@@ -145,7 +145,7 @@
   <div id="app">
     <img id="back" :src="theme.background">
     <div class="show">
-      <router-view v-slot="{ Component, route }" :linnear="theme.linnear" >
+      <router-view v-slot="{ Component, route }" :linear="theme.linnear" >
         <!-- 使用任何自定义过渡和回退到 `fade` -->
         <transition :name="move" mode="out-in">
           <component :is="Component" :key="$route.path" />

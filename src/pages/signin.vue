@@ -2,8 +2,9 @@
     import router from '@/router';
     import {reactive,ref} from 'vue'
     import{type FormInstance } from 'element-plus';
+    import {GetSignInfo} from '@/api/request'
     const ruleFormRef=ref<FormInstance>()
-    defineProps(["linnear","back"])
+    defineProps(["linear","back"])
     let ruleForm=reactive({
           account: '',
           pass: '',
@@ -14,12 +15,32 @@
         if (!formEl) return
         formEl.validate((valid) => {
             if (valid) {
-                ElMessage({
-                message: '注册成功',
-                grouping: true,
-                type: 'success',
-            })
-                router.push({path:'/login'})
+                GetSignInfo({password:ruleForm.pass,username:ruleForm.account,role:1,shopId:1}).then((res)=>{
+                    if (res){
+                        ElMessage({
+                        message: '注册成功',
+                        grouping: true,
+                        type: 'success',
+                        })
+                        router.push({path:'/login'})
+                    }
+                    else{
+                        ElMessage({
+                        message: '用户已被注册',
+                        grouping: true,
+                        type: 'error',
+                        })
+                    }
+                }).catch(()=>{
+                    ElMessage({
+                    message: '网络错误',
+                    grouping: true,
+                    type: 'error',
+                    })
+                })
+                
+           
+                
             } else {
             console.log('error submit!')
             return false
@@ -67,9 +88,7 @@
             { validator: checkVali, trigger: 'blur' }
           ]
     })
-    function getvali(){
 
-    }
 </script>
 
 <template>
@@ -89,12 +108,6 @@
                 <el-form-item label="确定密码" prop="checkPass">
                     <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="验证码" prop="vali">
-                    <div class="line">
-                        <el-input v-model.number="ruleForm.vali"  autocomplete="off"></el-input>
-                        <div class="vali" @click="getvali()">获取验证码</div>
-                    </div>
-                </el-form-item>
                 <div></div>
                 <el-form-item>
                     <el-button type="primary" @click="submitForm(ruleFormRef)" class="blink">注册</el-button>
@@ -113,7 +126,7 @@
         flex-direction: row;
         width: 40%;
         height: 50%;
-        font-family: "Microsoft soft";
+        font-family: "Microsoft soft",serif;
     }
     .right h2{
         margin-top: 30px;
@@ -146,10 +159,11 @@
         width: 50%;
         margin: auto;
         position:relative;
+        font-family: "Microsoft soft",serif;
         border-radius: 30px;
         outline-style: none ;
         border: 1px solid #ccc; 
-        background-image:linear-gradient(90deg,v-bind(linnear));
+        background-image:linear-gradient(90deg,v-bind(linear));
         background-size: 400%;
         padding: 3%;
         font-size: 14px;
@@ -176,19 +190,4 @@
     color: white;
     font-weight: bold;
     }
-    .vali{
-        min-width: 100px;
-        height: 30px;
-        font-weight: bold;
-        border: 0;
-        user-select:none;
-        cursor: pointer;
-        background-color: white ;
-        border-radius: 5px;
-    }
-    .line{
-        display: flex;
-        flex-direction: row;
-    }
-
 </style>

@@ -4,7 +4,7 @@ import firstLine from '../component/home-first-line.vue'
 import person from '../component/person.vue'
 import * as echarts from 'echarts';
 import Header from '../component/header.vue'
-defineProps(["linnear"])
+defineProps(["linear"])
 import {ref,onMounted} from "vue"
 interface employee{
     name:string,
@@ -224,23 +224,23 @@ window.addEventListener('resize',()=>{
             <template v-slot:rate>{{  }}</template>
         </Header>
         <div id="first-line">
-            <firstLine :linnear="linnear" class="first-line">
+            <firstLine :linnear="linear" class="first-line">
                 <template v-slot:title>总点单量</template>
                 <template v-slot:number>16465136</template>
             </firstLine>
-            <firstLine :linnear="linnear" class="first-line">
+            <firstLine :linnear="linear" class="first-line">
                 <template v-slot:title>今日成交额</template>
                 <template v-slot:number>16465136</template>
             </firstLine>
-            <firstLine :linnear="linnear" class="first-line">
+            <firstLine :linnear="linear" class="first-line">
                 <template v-slot:title>季度物料成本</template>
                 <template v-slot:number>16465136</template>
             </firstLine>
-            <firstLine :linnear="linnear" class="first-line">
+            <firstLine :linnear="linear" class="first-line">
                 <template v-slot:title>极度平均利润率</template>
                 <template v-slot:number>16.4%</template>
             </firstLine>
-            <firstLine :linnear="linnear" class="first-line">
+            <firstLine :linnear="linear" class="first-line">
                 <template v-slot:title>月度工时统计</template>
                 <template v-slot:number>16465136h</template>
             </firstLine>
@@ -328,7 +328,7 @@ window.addEventListener('resize',()=>{
     flex: 2.5;
 }
 .first-line{
-    background-image:linear-gradient(90deg,v-bind(linnear));
+    background-image:linear-gradient(90deg,v-bind(linear));
     background-size: 400%;
     color: white;
     flex: 1;

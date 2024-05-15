@@ -3,7 +3,7 @@ import type { FormInstance } from 'element-plus';
 import Header from '../component/header.vue'
 import {reactive, ref,onMounted, triggerRef} from 'vue'
 const ruleFormRef = ref<FormInstance>()
-defineProps(["linnear"])
+defineProps(["linear"])
 let isactive=ref(false)
 function changeclass(){
     isactive.value=!isactive.value
@@ -592,7 +592,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
         border-radius: 30px;
         outline-style: none ;
         border: 1px solid #ccc; 
-        background-image:linear-gradient(90deg,v-bind(linnear));
+        background-image:linear-gradient(90deg,v-bind(linear));
         background-size: 400%;
         padding: 3%;
         font-size: 14px;
