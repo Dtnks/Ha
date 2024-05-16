@@ -2,7 +2,7 @@
     import router from '@/router';
     import {reactive,ref} from 'vue'
     import{type FormInstance } from 'element-plus';
-    import {GetSignInfo} from '@/api/request'
+    import {postSignInfo} from '@/api/request'
     const ruleFormRef=ref<FormInstance>()
     defineProps(["linear","back"])
     let ruleForm=reactive({
@@ -15,7 +15,7 @@
         if (!formEl) return
         formEl.validate((valid) => {
             if (valid) {
-                GetSignInfo({password:ruleForm.pass,username:ruleForm.account,role:1,shopId:1}).then((res)=>{
+                postSignInfo({password:ruleForm.pass,username:ruleForm.account,role:1,shopId:1}).then((res)=>{
                     if (res){
                         ElMessage({
                         message: '注册成功',

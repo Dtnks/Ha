@@ -2,7 +2,7 @@
 defineProps(["linear"])
 import router from '@/router'
 import {reactive,onMounted,ref} from 'vue'
-import {GetLoginInfo} from '@/api/request'
+import {postLoginInfo} from '@/api/request'
 import {UserStore} from "@/stores/user"
 import pinia from "@/stores/user"
 import{ ElMessage, type FormInstance } from 'element-plus';
@@ -25,7 +25,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
 if (!formEl) return
     formEl.validate((valid)=>{
         if (valid) {
-            GetLoginInfo({
+            postLoginInfo({
             password:ruleForm.pass,
             username:ruleForm.account
         }).then(()=>

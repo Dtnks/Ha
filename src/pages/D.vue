@@ -3,7 +3,7 @@ import type{ FormInstance, RowInstance } from 'element-plus';
 import Header from '../component/header.vue'
 import {ref,reactive} from 'vue'
 import axios from 'axios'
-import {GetOrder,GetOrderDetail} from '@/api/request'
+import {getOrder,getOrderDetail,postOrderDelete} from '@/api/request'
 let record=ref([])
 const centerDialogVisible=ref(false)
 function timestampToTime(timestamp) {
@@ -17,7 +17,7 @@ function timestampToTime(timestamp) {
     let s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
     return Y + M + D + h + m + s;
   }
-GetOrder({page:2,pageSize:20}).then((res:any)=>{
+getOrder({page:2,pageSize:20}).then((res:any)=>{
     record.value=res.data.records
     record.value.map((item:any)=>{
         item.estimatedDeliveryTime=timestampToTime(item.estimatedDeliveryTime)
@@ -32,20 +32,25 @@ interface DetailsRes {
     number: number; /*数量 */
     orderId: number;/*订单id */
     setmealId: number;/*套餐id */
-
 }
 let detail=ref<DetailsRes>()
 function handleDetail(index:number,id:number){
-    GetOrderDetail(id).then((res:DetailsRes)=>{
+    getOrderDetail(id).then((res:DetailsRes)=>{
         detail.value=res
         centerDialogVisible.value=true
     })
 }
-function tableRowClassName(rowIndex:number) {
-     if ((rowIndex + 1) % 2 === 0) {
+function handleDelete (index:number,id:number){
+    postOrderDelete(id).then(()=>{    
+        record.value.splice(index , 1)
+
+    })
+}
+function tableRowClassName(rowIndex:any) {
+     if ((rowIndex.rowIndex) % 2 === 0) {
           return 'oddRow';
      }
-      return 'evenRow';
+    else return 'evenRow';
  }
 </script>
 <template>
@@ -61,7 +66,7 @@ function tableRowClassName(rowIndex:number) {
                 <el-table-column prop="userName" label="用户名" />
                 <el-table-column prop="orderDishes" label="菜品信息" />    
                 <el-table-column prop="address" label="地址" />
-                <el-table-column prop="estimatedDeliveryTime" label="预计送达"/>
+                <el-table-column prop="estimatedDeliveryTime" label="预计送达" sortable/>
                 <el-table-column prop="tablewareNumber" label="餐具数量" />
                 <el-table-column label="操作">
                     <template #default="scope">
@@ -71,7 +76,7 @@ function tableRowClassName(rowIndex:number) {
                         <el-button
                         size="small"
                         type="danger"
-                        @click="handleDelete(scope.$index, scope.row)"
+                        @click="handleDelete(scope.$index, scope.row.id)"
                         >
                         删除
                         </el-button>
