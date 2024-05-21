@@ -1,8 +1,7 @@
 <script lang="ts" setup>
-import type{ FormInstance, RowInstance } from 'element-plus';
 import Header from '../component/header.vue'
 import {ref,reactive} from 'vue'
-import axios from 'axios'
+defineProps(["linear"])
 import {getOrder,getOrderDetail,postOrderDelete} from '@/api/request'
 let record=ref([])
 const centerDialogVisible=ref(false)
@@ -17,12 +16,15 @@ function timestampToTime(timestamp) {
     let s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
     return Y + M + D + h + m + s;
   }
-getOrder({page:2,pageSize:20}).then((res:any)=>{
+const getorder = ()=>{
+    record.value=[]
+    getOrder({page:2,pageSize:20}).then((res:any)=>{
     record.value=res.data.records
     record.value.map((item:any)=>{
         item.estimatedDeliveryTime=timestampToTime(item.estimatedDeliveryTime)
     })
-})
+})}
+getorder()
 interface DetailsRes {
     amount: number;/*金额 */
     dishFlavor: string;/*口味 */
@@ -83,6 +85,7 @@ function tableRowClassName(rowIndex:any) {
                     </template>
                 </el-table-column>
             </el-table>
+            <el-button type="primary" @click="getorder()" class="blink">重新获取订单</el-button>
         </div>
     </div>
     <el-dialog
@@ -131,4 +134,28 @@ function tableRowClassName(rowIndex:any) {
     margin: 3vh 0;
     width: 50%;
 }
+.blink{
+        width: 100%;
+        margin: auto;
+        position: relative;
+        outline-style: none ;
+        border: 1px solid #ccc; 
+        background-image:linear-gradient(90deg,v-bind(linear));
+        background-size: 400%;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        color: white;
+    }
+    .blink:hover{
+        animation: animate 8s linear infinite;
+    }
+    @keyframes animate{
+        from {
+            background-position: 0%;
+        }
+        to{
+            background-position: 400%;
+        }
+    } 
 </style>

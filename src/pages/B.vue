@@ -423,7 +423,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
                             />
                             </el-form-item>
                             <el-form-item>
-                                <el-button type="primary" @click="submitForm(ruleFormRef)" class="blink">执行操作{{  }}</el-button>
+                                <el-button type="primary" @click="submitForm(ruleFormRef)" class="blink">执行操作</el-button>
                             </el-form-item>
                         </div>
                     </div>

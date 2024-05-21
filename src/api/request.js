@@ -17,5 +17,5 @@ export const getOrderDetail=async (id)=>{
 }
 export const postOrderDelete=async (id)=>{
     const res=await axios.post(`/api/order/admin/delete?id=${id}`)
-    return res.data.data
+    return res.data.success
 }
