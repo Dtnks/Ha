@@ -183,7 +183,7 @@
     width:100%;
     object-fit: fill;
     z-index: -1;
-    background-size:auto;
+    background-size:cover;
   }
   #app{
     position: absolute;
@@ -191,8 +191,8 @@
     width: 100%;
     text-align: center;
     display: flex;
-    min-width: 1400px;
-    min-height: 800px;
+    min-width: 1200px;
+    min-height: 600px;
     flex-direction: column;
   }
   .show{

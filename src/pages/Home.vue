@@ -25,10 +25,6 @@ import routers from '../router'
     </div>
 </template>
 <style scoped>
-template{
-    display: flex;
-    flex-direction: row;
-}
 .nav{
     flex:1;
     display: flex;

@@ -225,7 +225,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
                 <div id="search">
                     <div class="middle">
                         <form class="search-box">
-                        <input type="text" name="" :class="{'inclicked':isactive,'input':true}" v-model="content">
+                        <input type="text" name="" :class="{'inclicked':isactive,'input':true}" v-model="content"/>
                         <button type="button" name="button" :class="{'close':isactive,'btn':true}" @click="changeclass()"></button>
                         </form>
                     </div>
@@ -444,7 +444,6 @@ const submitForm = (formEl: FormInstance | undefined) => {
 #show{
     display: flex;
     text-align: left;
-    padding: 15px;
     flex:1;
     flex-direction: row;
 }
@@ -495,11 +494,12 @@ const submitForm = (formEl: FormInstance | undefined) => {
 }
 #search{
     position: relative;
+    right: -5vw;
     margin: 0 30px;
-    flex: 1;
 }
 #work{
-    flex:7;
+    padding-top: 3vh;
+    flex:1;
 }
 .middle {
   position: absolute;
