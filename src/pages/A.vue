@@ -4,12 +4,10 @@ import firstLine from '../component/home-first-line.vue'
 import person from '../component/person.vue'
 import * as echarts from 'echarts';
 import Header from '../component/header.vue'
+
+//数据定义
 defineProps(["linear"])
 import {ref,onMounted} from "vue"
-interface employee{
-    name:string,
-    position:string
-}
 let person1:employee={
     name:"杨小黑",
     position:"外卖员"
@@ -30,13 +28,21 @@ let option:EChartsOption
 let option1:EChartsOption
 let option2:EChartsOption
 let option3:EChartsOption
+
+//接口
+interface employee{
+    name:string,
+    position:string
+}
+
+//数据图渲染和适应页面变化
 onMounted(()=>{
-    //路由切换的时候，会出现echart不显示，原因如下：
+    // 路由切换的时候，会出现echart不显示，原因如下：
     // 如果未实例化 的盒子则进行 实例化,在此期间会在div容器生成一个 _echarts_instance_ 属性，
     // 该属性值就是当前echarts的ID,然后进入后边的渲染操作流程
     // 当 经过 切换路由 在回来时， echarts的ID就回到初始状态， 所以 和 原先的 指定id 的 div 的_echarts_instance_属性值就不匹配了，
     // 所以我们需要 让 指定id 的 div 的_echarts_instance_属性值也要进入一个 初始状态， 即 空状态。
-    //所以在使用前把元素的_echarts_instance_属性清空
+    // 所以在使用前把元素的_echarts_instance_属性清空
     document.getElementById("first-chart")!.removeAttribute('_echarts_instance_');
     document.getElementById("second-chart")!.removeAttribute('_echarts_instance_');
     document.getElementById("one")!.removeAttribute('_echarts_instance_');
@@ -207,8 +213,6 @@ onMounted(()=>{
     myChart2.setOption(option2);
     myChart3.setOption(option3)
 })
-let name=ref("管理员姓名")
-let rate=ref("权限等级")
 window.addEventListener('resize',()=>{
     myChart.resize()
     myChart1.resize()

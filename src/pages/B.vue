@@ -2,6 +2,8 @@
 import type { FormInstance } from 'element-plus';
 import Header from '../component/header.vue'
 import {reactive, ref,onMounted, triggerRef} from 'vue'
+
+//数据定义
 const ruleFormRef = ref<FormInstance>()
 defineProps(["linear"])
 let isactive=ref(false)
@@ -9,11 +11,32 @@ function changeclass(){
     isactive.value=!isactive.value
     console.log(11111)
 }
+//只能用const否则页面会报错，不知道为啥
+const ruleForm=reactive({
+    Name:"",
+    Amount:"",
+    Kind:"",
+    Time:"",
+    Time_keep:"",
+    Adress:"",
+    Price:"",
+    Prices:"",
+    Storage:"",
+    Time_change:"",
+    Operator:"",
+    Content:""
+})
+const list = ref<ListItem[]>([])
+const option5 = ref<ListItem[]>([])
+const value = ref<string[]>([])
+const loading = ref(false)
+const states = [
+  'Alabama',
+  'Alaska',
+  'Arizona',
+  'Arkansas',
+  'California',]
 let content=ref("")
-interface ListItem {
-  value: string
-  label: string
-}
 let option1=[
     {
         value:"糖浆",
@@ -96,6 +119,14 @@ let option6=[
         label:"SD-CJSNDK676"
     }
 ]
+
+//接口
+interface ListItem {
+  value: string
+  label: string
+}
+
+//表单验证
 let valiInputEmpty=(rule:object,value:string,callback:any)=>{
     if(value==="")
     {
@@ -146,16 +177,8 @@ Time_change:[{validator:valiTimeEmpty,trigger:'blur'}],
 Operator:[{validator:valiInputEmpty,trigger:'blur'}],
 Content:[{validator:valiInputEmpty,trigger:'blur'}]
 })
-const list = ref<ListItem[]>([])
-const option5 = ref<ListItem[]>([])
-const value = ref<string[]>([])
-const loading = ref(false)
-const states = [
-  'Alabama',
-  'Alaska',
-  'Arizona',
-  'Arkansas',
-  'California',]
+
+//远程搜索
 onMounted(() => {
   list.value = states.map((item) => {
     return { value: `value:${item}`, label: `label:${item}` }
@@ -175,21 +198,8 @@ const remoteMethod = (query: string) => {
     option5.value = []
   }
 }
-//只能用const否则页面会报错，不知道为啥
-const ruleForm=reactive({
-    Name:"",
-    Amount:"",
-    Kind:"",
-    Time:"",
-    Time_keep:"",
-    Adress:"",
-    Price:"",
-    Prices:"",
-    Storage:"",
-    Time_change:"",
-    Operator:"",
-    Content:""
-})
+
+//提交表单
 const submitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.validate((valid) => {

@@ -3,6 +3,8 @@
     import {reactive,ref} from 'vue'
     import{type FormInstance } from 'element-plus';
     import {postSignInfo} from '@/api/request'
+
+    //数据定义
     const ruleFormRef=ref<FormInstance>()
     defineProps(["linear","back"])
     let ruleForm=reactive({
@@ -11,6 +13,8 @@
           vali: '',
           checkPass:''
         })
+
+    //表单提交
     const submitForm = (formEl: FormInstance | undefined) => {
         if (!formEl) return
         formEl.validate((valid) => {
@@ -47,6 +51,8 @@
             }
         })
         }
+
+    //表单校验
     let valiempty=(rule:object,value:string,callback:any)=>{
         if (value===''){
            callback(new Error('请输入内容'));

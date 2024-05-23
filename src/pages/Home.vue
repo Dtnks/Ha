@@ -2,7 +2,6 @@
 defineOptions({
     inheritAttrs:false
 })
-import routers from '../router'
 </script>
 
 <template>

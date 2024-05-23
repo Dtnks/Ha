@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import Header from '../component/header.vue'
 import {ref,reactive} from 'vue'
-defineProps(["linear"])
 import {getOrder,getOrderDetail,postOrderDelete} from '@/api/request'
+
+//变量定义
+defineProps(["linear"])
 let record=ref([])
 const centerDialogVisible=ref(false)
+
+//转换时间戳
 function timestampToTime(timestamp) {
     timestamp = timestamp ? timestamp : null;
     let date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
@@ -16,6 +20,8 @@ function timestampToTime(timestamp) {
     let s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
     return Y + M + D + h + m + s;
   }
+
+//请求数据
 const getorder = ()=>{
     record.value=[]
     getOrder({page:2,pageSize:20}).then((res:any)=>{
@@ -50,12 +56,16 @@ function handleDelete (index:number,id:number){
 
     })
 }
+
+//画斑马纹
 function tableRowClassName(rowIndex:any) {
      if ((rowIndex.rowIndex) % 2 === 0) {
           return 'oddRow';
      }
     else return 'evenRow';
  }
+
+
 </script>
 <template>
     <div id="control">
@@ -65,7 +75,10 @@ function tableRowClassName(rowIndex:any) {
             <template v-slot:rate>{{  }}</template>
         </Header>
         <div class="col">
-            <el-table :data="record" max-height="85vh" :row-class-name="tableRowClassName">
+            <el-table 
+            :data="record" 
+            max-height="85vh" 
+            :row-class-name="tableRowClassName">
                 <el-table-column prop="number" label="订单号" />
                 <el-table-column prop="userName" label="用户名" />
                 <el-table-column prop="orderDishes" label="菜品信息" />    
@@ -87,7 +100,12 @@ function tableRowClassName(rowIndex:any) {
                     </template>
                 </el-table-column>
             </el-table>
-            <el-button type="primary" @click="getorder()" class="blink">重新获取订单</el-button>
+            <el-button 
+            type="primary" 
+            @click="getorder()" 
+            class="blink">
+                重新获取订单
+            </el-button>
         </div>
     </div>
     <el-dialog

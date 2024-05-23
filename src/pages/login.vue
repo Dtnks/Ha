@@ -1,11 +1,13 @@
 <script lang="ts" setup>
-defineProps(["linear"])
 import router from '@/router'
 import {reactive,onMounted,ref} from 'vue'
 import {postLoginInfo} from '@/api/request'
 import {UserStore} from "@/stores/user"
 import pinia from "@/stores/user"
 import{ ElMessage, type FormInstance } from 'element-plus';
+
+//数据定义
+defineProps(["linear"])
 const ruleFormRef=ref<FormInstance>()
 const store=UserStore(pinia)
 let code=ref<string|null>(localStorage.getItem('code'))
@@ -21,6 +23,8 @@ let validEmpty=(rule:object, value:string, callback:any)=>{
     callback()
   }
 }
+
+//提交表单
 const submitForm = (formEl: FormInstance | undefined) => {
 if (!formEl) return
     formEl.validate((valid)=>{
@@ -51,6 +55,8 @@ if (!formEl) return
         }
     })
 }
+
+//表单校验
 let checkValid=(rule:object, value:string, callback:any)=>{
   if (!value) {
     return callback(new Error('验证码不能为空'));
@@ -78,6 +84,8 @@ let rules={
     { validator: checkValid, trigger: 'blur' }
   ]
 }
+
+//改变页面验证码
 function changeCode(){
   code.value=''
   co.value="rgb("+Math.random()*255+","+Math.random()*255+","+Math.random()*255+")"
