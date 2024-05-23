@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import Header from '../component/header.vue'
 import {ref,reactive} from 'vue'
 defineProps(["linear"])
@@ -34,10 +34,12 @@ interface DetailsRes {
     number: number; /*数量 */
     orderId: number;/*订单id */
     setmealId: number;/*套餐id */
+    orderDetailList:object /*订单详情 */
 }
 let detail=ref<DetailsRes>()
 function handleDetail(index:number,id:number){
     getOrderDetail(id).then((res:DetailsRes)=>{
+        console.log(res)
         detail.value=res
         centerDialogVisible.value=true
     })
@@ -95,10 +97,13 @@ function tableRowClassName(rowIndex:any) {
     align-center
   >
   <div class="dialog">
-    <span>数量：{{ detail?.number }}</span>
-    <span>金额：{{ detail?.amount }}</span>
-    <span>口味：{{ detail?.dishFlavor }}</span>
-    <span>套餐名称：{{ detail?.setmealId }}</span>
+    <div class="show_detail"  v-for="item in detail">
+        <span>菜品名称：{{ item?.name }}</span>
+        <span>数量：{{ item?.number }}</span>
+        <span>金额：{{ item?.amount }}</span>
+        <span>口味：{{ item?.dishFlavor }}</span>
+        <span>套餐名称：{{ item?.setmealId }}</span>
+    </div>
   </div>
   </el-dialog>
 </template>
@@ -126,13 +131,9 @@ function tableRowClassName(rowIndex:any) {
 }
 .dialog{
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    
-}
-.dialog span{
-    margin: 3vh 0;
-    width: 50%;
+    flex-direction: column;
+    width: 40vw;
+    height: 30vh;
 }
 .blink{
         width: 100%;
@@ -158,4 +159,14 @@ function tableRowClassName(rowIndex:any) {
             background-position: 400%;
         }
     } 
+.show_detail{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 3vh 0;
+}
+.show_detail span{
+    width: 33%;
+    height: 5vh;
+}
 </style>

@@ -13,7 +13,7 @@ export const getOrder=async (GetOrderRequest)=>{
 }
 export const getOrderDetail=async (id)=>{
     const res=await axios.get(`/api/order/admin/details/${id}`)
-    return res.data.data
+    return res.data.data.orderDetailList
 }
 export const postOrderDelete=async (id)=>{
     const res=await axios.post(`/api/order/admin/delete?id=${id}`)
